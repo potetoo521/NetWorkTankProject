@@ -2,6 +2,10 @@
 //Dxライブラリ使用
 #pragma once
 #include "main.h"
+#include "character.h"
+
+//リスト
+std::list<Base*>base;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	_In_ LPWSTR lpCmdLine, _In_ int nShowCmd) 
@@ -61,19 +65,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	KeyInputString(0, 16, 10, name, FALSE);
 
 	//初回送信データの作成
-	Data* my_Data = new Data(0.0f, 0.0f, name);
+	Player* my_Data = new Player(0.0f, 0.0f, name);
 
 	//初回接続(サーバーへ接続）
 	NetHandel = ConnectNetWork(IP, Port);//入力したIPと設定したポートを使用
-
-
-	struct MousePos {
-		int mouse_x, mouse_y;
-
-
-	};
-
-	MousePos mop{ 0,0 };
 
 
 	//接続するまで待機
@@ -111,7 +106,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	while (CheckHitKey(KEY_INPUT_ESCAPE) == 0) {
 		ClearDrawScreen();//画面クリア
 
-		bool net_Receive = false;
+		
+
+		bool net_Receive = false;//受信データがあるか(Debug用)
 
 		//受信データがあるかチェック
 		if (GetNetWorkDataLength(NetHandel) != 0) {
@@ -121,39 +118,22 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 			memcpy_s(Player_ALL, sizeof(SendData), StrBuf, sizeof(SendData));
 			net_Receive = true;
 		}
-
-		//Pos mop{ 0.0f,0.0f };
-		if(net_Receive==false)
+		else
 		{
 			//データを受信していない場合
+			
 			//移動処理
 			Vec v{ 0.0f,0.0f };
-			if (CheckHitKey(KEY_INPUT_UP)) v.y = -4.0f;
-			if (CheckHitKey(KEY_INPUT_DOWN)) v.y = 4.0f;
-			if (CheckHitKey(KEY_INPUT_LEFT)) v.x = -4.0f;
-			if (CheckHitKey(KEY_INPUT_RIGHT)) v.x = 4.0f;
+		     v = my_Data->vec;
+			 
 			//入力があった場合にデータを送信
 			if (v.x != 0.0f || v.y != 0.0f) {
 				//データ送信
 				NetWorkSend(NetHandel, &v, sizeof(Vec));
 			}
 
-		
-			//弾丸発射目標取得処理
-			if (GetMouseInput()&MOUSE_INPUT_LEFT) {
-				//押された時
-			
-				//mouseカーソルの位置をセット
-				GetMousePoint(&mop.mouse_x,&mop.mouse_y);
-
-
 				//データ送信
 				NetWorkSend(NetHandel, &mop, sizeof(Pos));
-
-			}
-			else {
-				//押されていない
-			}
 
 		}
 
@@ -163,17 +143,37 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 			mop.mouse_y
 		);
 
+		//リストのメソッドを実行
+		for (auto i = base.begin(); i != base.end(); i++)
+			(*i)->Action(&base);//全てのオブジェクトの処理
+
+		for (auto i = base.begin(); i != base.end(); i++)
+			(*i)->Draw();//全てのオブジェクトの描画処理
+
+		//リストから要素を削除(IDが-999の時に削除)
+		for (auto i = base.begin(); i != base.end(); i++)
+		{
+			if ((*i)->ID == DESTROY_ID)//IDが-999ならdelete
+			{
+				//リストから削除
+				delete(*i);
+				i = base.erase(i);
+				break;
+			}
+		}
+
+
 
 		//描画
 		//Player_ALLを使って画面の更新
 		for (int i = 0; i < MAX; i++) {
 			if (Player_ALL->data[i].ID != -1) {
 				//キャラ
-				DrawGraphF(Player_ALL->data[i].pos.x,
+				/*DrawGraphF(Player_ALL->data[i].pos.x,
 					Player_ALL->data[i].pos.y,
 					img[i],
 					TRUE
-				);
+				);*/
 				//名前
 				DrawStringF(Player_ALL->data[i].pos.x,
 					Player_ALL->data[i].pos.y,

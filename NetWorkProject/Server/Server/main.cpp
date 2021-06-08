@@ -5,7 +5,9 @@
 #include "main.h"
 #include <thread>
 #include <iostream>
-using namespace std;
+#include <list>
+
+std::list<Data*>datalist;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	_In_ LPWSTR lpCmdLine, _In_ int nShowCmd)
@@ -92,9 +94,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 						//二回目以降の接続
 						Vec v{ 0.0f,0.0f };//移動ベクトル
 						MousePos mop{ 0,0 };   //mouse位置
+						bool mou_l;//左クリックの状態
+
 						//受信データを変換
 						memcpy_s(&v, sizeof(Vec), StrBuf, sizeof(Vec));
 						memcpy_s(&mop, sizeof(MousePos), StrBuf, sizeof(MousePos));
+						memcpy_s(&mou_l, sizeof(bool), StrBuf, sizeof(bool));
 
 						//Action()処理
 
@@ -103,7 +108,29 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 						p_data[0]->pos.y += v.y;
 
 
+						//弾丸発射処理---
+						if (mou_l) {//mouse左クリックされたとき真
 
+							//Playerの位置を取得
+							float p_x = p_data[0]->pos.x;
+							float p_y = p_data[0]->pos.y;
+							
+							
+							//弾丸スポーン処理
+							auto a = (Data*)new BulletData(p_x,  p_y);
+							datalist.push_back(a);
+
+						}
+						//当たり判定
+						for (auto i = datalist.begin(); i != datalist.end(); i++) {
+							if ((*i)->ID == 1) {
+								Point e_pos = ((BulletData*)(*i))->pos;
+								if (1) {
+
+									;
+								}
+							}
+						}
 						//弾丸の移動処理
 						bullet_data[0]->pos.x += v.x;
 						bullet_data[0]->pos.x += v.y;
@@ -146,7 +173,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 						strcpy_s(Send_Data->data[0].name, sizeof(p_data[0]->name), p_data[0]->name);
 						Send_Data->data[0].pos = p_data[0]->pos;//位置
 						Send_Data->data[0].ip = p_data[0]->ip;//IP
-						Send_Data->data[0].ID = p_data[0]->ID;
+						Send_Data->data[0].ID = p_data[0]->ID;//ID
 
 						//データを送信
 						NetWorkSend(p1_NetHandle, Send_Data, sizeof(SendData));

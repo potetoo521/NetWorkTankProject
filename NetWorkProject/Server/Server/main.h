@@ -10,6 +10,7 @@
 #define HEIGHT 600 //windowサイズ 縦
 
 //IPDATA IP_set();//IP入力
+using namespace std;
 
 //スレッドのナンバー
 enum {
@@ -52,6 +53,7 @@ public:
 	void Data_Init();
 };
 
+
 class BulletData {
 private:
 public:
@@ -66,8 +68,6 @@ public:
 
 
 };
-
-
 
 //送受信データ用のクラス
 class SendData {
