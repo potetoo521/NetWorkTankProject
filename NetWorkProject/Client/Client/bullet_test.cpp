@@ -53,7 +53,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	KeyInputString(0, 16, 10, name, FALSE);
 
 	//初回送信データの作成
-	Data* my_Data = new Data(0.0f, 0.0f, name);
+	Player* my_Data = new Player(0.0f, 0.0f, name);
 
 	//初回接続(サーバーへ接続）
 	NetHandel = ConnectNetWork(IP, Port);//入力したIPと設定したポートを使用

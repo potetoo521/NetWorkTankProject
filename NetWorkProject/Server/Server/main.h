@@ -1,9 +1,11 @@
 #pragma once
 #include "DxLib.h"
 
+#include <memory>
 #include <string.h>
 #include <string>
 #include <sstream>
+#include <list>
 
 #define MAX 2 //接続数
 #define WIDTH 800 //windowサイズ 横
@@ -26,7 +28,7 @@ struct Vec {
 };
 
 //位置情報
-struct Point {
+struct Pos {
 	float x, y;
 };
 
@@ -36,33 +38,60 @@ struct MousePos {
 };
 
 
-//プレイヤークラス
-class Data {
+//ベースクラス
+class Base {
 private:
 public:
-	char name[8]{ "null" };//名前
-	Point pos{ 0.0f,0.0f };//位置
-	MousePos mouPos{ 0,0 };//mouseの位置
+	int ID{ -1 };//オブジェクトのID
+	virtual int Action(list<unique_ptr<Base*>>& base) = 0;//処理
+	virtual void Data_Init()=0;//初期化用
+	//virtual void Draw() = 0;//描画
+	//virtual bool CheckHit(float m_x, float m_y, float e_x, float e_y) = 0;
 
+};
+
+//プレイヤークラス
+class PlayerData :public Base{
+private:
+	int img{0};
+public:
+	char name[8]{ "null" };//名前
+	Pos pos{ 0.0f,0.0f };//位置
+	Vec vec{ 0.0f,0.0f };//移動ベクトル
+	MousePos moupos{ 0, 0 };  //mouseの位置
 	int ID{ -1 };//オブジェクト識別用
 	IPDATA ip{ 0,0,0,0 };//IPアドレス保存用
+
+	bool mouset_f = false;//mouse座標取得判定
+
 	//コンストラクタ
-	Data();
-	Data(float _x, float _y, char* _name);
+	PlayerData();
+	PlayerData(float _x, float _y, char* _name);
+
+	int Action(list<unique_ptr<Base*>>& data);
+
 	//初期化用メソッド
 	void Data_Init();
+
+	//処理
+	//int Player::Action(list<Base*>* base) {
+	//void Draw();
+	
 };
 
 
-class BulletData {
+class BulletData :public Base{
 private:
 public:
 
-	Point pos{ 0.0f,0.0f };//位置
+	Pos pos{ 0.0f,0.0f };//位置
 	Vec vec{ 0.0f,0.0f };//移動ベクトル
 	//コンストラクタ
 	BulletData();
 	BulletData(float _x, float _y);
+
+	
+	int Action(list<unique_ptr<Base*>>& base);
 	//初期化メソッド
 	void Data_Init();
 
@@ -73,7 +102,7 @@ public:
 class SendData {
 private:
 public:
-	Data data[MAX];
+	PlayerData data[MAX];
 	BulletData b_data[MAX];
 };
 

@@ -1,6 +1,6 @@
 //data.cpp
 #include "main.h"
-
+/*
 //コンストラクタ
 Data::Data(float _x, float _y, char* _name) {
 	pos.x = _x;
@@ -8,8 +8,8 @@ Data::Data(float _x, float _y, char* _name) {
 
 	strcpy_s(name, _name);
 }
-
-Data::Data() {}
+*/
+/*Data::Data() {}
 
 //初期化メソッド
 void Data::Data_Init() {
@@ -21,4 +21,4 @@ void Data::Data_Init() {
 	pos.y = 0.0f;
 
 	ID = -1;
-}
+}*/

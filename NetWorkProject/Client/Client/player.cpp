@@ -3,15 +3,19 @@
 
 //コンストラクタ
 Player::Player(float _x, float _y, char* _name) {
+	strcpy_s(name, "null");
 	ID = 0;
 	img = LoadGraph("image/maid.png");
-	mouset = false;//mouse座標取得判定
+	mouset_f = false;//mouse座標取得判定
+	ip.d1 = 0; ip.d2 = 0; ip.d3 = 0; ip.d4 = 0;//IPアドレス
 
 	strcpy_s(name, _name);
 }
 
+Player::Player(){}
+
 //処理
-int Player::Action(list<Base*>* base) {
+int Player::Action(list<unique_ptr<Base*>>&base) {
 	//キー入力
 	Vec v{ 0.0f,0.0f };
 	if (CheckHitKey(KEY_INPUT_UP)) v.y = -4.0f;
@@ -23,14 +27,14 @@ int Player::Action(list<Base*>* base) {
 		//弾丸発射目標取得処理
 	if (GetMouseInput() & MOUSE_INPUT_LEFT) {
 		//押された時
-		mouset = true;
+		mouset_f = true;
 
 		//mouseカーソルの位置を取得
-		mouset = GetMousePoint(&mop.mouse_x, &mop.mouse_y);
+		mouset_f = GetMousePoint(&moupos.mouse_x, &moupos.mouse_y);
 
 	}
 	else {
-		mouset = false;
+		mouset_f = false;
 	}
 	return 0;
 }

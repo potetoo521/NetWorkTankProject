@@ -6,8 +6,10 @@
 #include <thread>
 #include <iostream>
 #include <list>
+#include <memory>
 
-std::list<Data*>datalist;
+//std::list<Data*>datalist;
+list<unique_ptr<Base>>datalist;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	_In_ LPWSTR lpCmdLine, _In_ int nShowCmd)
@@ -34,10 +36,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	char StrBuf[256] = { "NULL" };
 
 	//プレイヤーデータ
-	Data* p_data[MAX];
+	PlayerData* p_data[MAX];
 	BulletData* bullet_data[MAX];
 
-	for (int i = 0; i < MAX; i++) p_data[i] = new Data();
+	for (int i = 0; i < MAX; i++) p_data[i] = new PlayerData();
 
 	//送信用データ
 	SendData* Send_Data = new SendData();
@@ -60,7 +62,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	}
 	*/
 
-	//p_data[0]
+	//p_data[0]==PlayerData
 	thread* p1 = new thread([&]()
 		{
 			IPDATA ip{ 0,0,0,0 };//IPアドレス
@@ -103,6 +105,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 
 						//Action()処理
 
+
 						//移動処理
 						p_data[0]->pos.x += v.x;
 						p_data[0]->pos.y += v.y;
@@ -117,14 +120,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 							
 							
 							//弾丸スポーン処理
-							auto a = (Data*)new BulletData(p_x,  p_y);
-							datalist.push_back(a);
+							auto a = (unique_ptr<Base>)new BulletData();
+							datalist.push_back(move(a));
 
 						}
 						//当たり判定
 						for (auto i = datalist.begin(); i != datalist.end(); i++) {
 							if ((*i)->ID == 1) {
-								Point e_pos = ((BulletData*)(*i))->pos;
+								Pos e_pos = ((BulletData*)(*i).get())->pos;
 								if (1) {
 
 									;
@@ -297,8 +300,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 				p_data[i]->name,
 				p_data[i]->pos.x,
 				p_data[i]->pos.y,
-				p_data[i]->mouPos.x,
-				p_data[i]->mouPos.y
+				p_data[i]->moupos.x,
+				p_data[i]->moupos.y
 			);
 		}
 

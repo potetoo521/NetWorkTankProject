@@ -3,9 +3,9 @@
 #pragma once
 #include "main.h"
 #include "character.h"
-
+#include <memory>
 //リスト
-std::list<Base*>base;
+std::list<unique_ptr<Base>>base;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	_In_ LPWSTR lpCmdLine, _In_ int nShowCmd) 
@@ -124,7 +124,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 			
 			//移動処理
 			Vec v{ 0.0f,0.0f };
+			MousePos m{ 0,0 };
 		     v = my_Data->vec;
+			 m = my_Data->moupos;
 			 
 			//入力があった場合にデータを送信
 			if (v.x != 0.0f || v.y != 0.0f) {
@@ -133,30 +135,35 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 			}
 
 				//データ送信
-				NetWorkSend(NetHandel, &mop, sizeof(Pos));
+				NetWorkSend(NetHandel, &m, sizeof(Pos));
 
 		}
 
 		DrawFormatString(0, 16, GetColor(255, 255, 255),
 			"mouse_x:%d          mouse_y:%d",
-			mop.mouse_x,
-			mop.mouse_y
+			my_Data->moupos.mouse_x,
+			my_Data->moupos.mouse_y
 		);
 
 		//リストのメソッドを実行
-		for (auto i = base.begin(); i != base.end(); i++)
+		for (auto i = base.begin(); i != base.end(); i++) {
 			(*i)->Action(&base);//全てのオブジェクトの処理
-
-		for (auto i = base.begin(); i != base.end(); i++)
+			
+		}
+			
+			
+		for (auto i = base.begin(); i != base.end(); i++) {
 			(*i)->Draw();//全てのオブジェクトの描画処理
 
+		}
+		
+			
 		//リストから要素を削除(IDが-999の時に削除)
 		for (auto i = base.begin(); i != base.end(); i++)
 		{
 			if ((*i)->ID == DESTROY_ID)//IDが-999ならdelete
 			{
 				//リストから削除
-				delete(*i);
 				i = base.erase(i);
 				break;
 			}
