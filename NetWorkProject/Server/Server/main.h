@@ -68,8 +68,9 @@ public:
 	PlayerData();
 	PlayerData(float _x, float _y, char* _name);
 
+	
 	int Action(list<unique_ptr<Base*>>& data);
-
+	
 	//初期化用メソッド
 	void Data_Init();
 

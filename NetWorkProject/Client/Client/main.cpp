@@ -67,6 +67,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	//初回送信データの作成
 	Player* my_Data = new Player(0.0f, 0.0f, name);
 
+	auto a = (unique_ptr<Base>) my_Data;
+	base.push_back(move(a));
+
+
 	//初回接続(サーバーへ接続）
 	NetHandel = ConnectNetWork(IP, Port);//入力したIPと設定したポートを使用
 
@@ -106,8 +110,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	while (CheckHitKey(KEY_INPUT_ESCAPE) == 0) {
 		ClearDrawScreen();//画面クリア
 
-		
-
 		bool net_Receive = false;//受信データがあるか(Debug用)
 
 		//受信データがあるかチェック
@@ -125,39 +127,41 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 			//移動処理
 			Vec v{ 0.0f,0.0f };
 			MousePos m{ 0,0 };
+			bool f = false;
 		     v = my_Data->vec;
 			 m = my_Data->moupos;
-			 
-			//入力があった場合にデータを送信
-			if (v.x != 0.0f || v.y != 0.0f) {
-				//データ送信
-				NetWorkSend(NetHandel, &v, sizeof(Vec));
-			}
+			 f = my_Data->mouset_f;
+			//データ送信
+			NetWorkSend(NetHandel, &v, sizeof(Vec)); //character移動Vec
+			
+			NetWorkSend(NetHandel, &m, sizeof(MousePos)); //Mouse位置方向Vec
 
-				//データ送信
-				NetWorkSend(NetHandel, &m, sizeof(Pos));
+			NetWorkSend(NetHandel, &f, sizeof(Pos)); //
 
 		}
 
 		DrawFormatString(0, 16, GetColor(255, 255, 255),
-			"mouse_x:%d          mouse_y:%d",
-			my_Data->moupos.mouse_x,
-			my_Data->moupos.mouse_y
+			"mouse_x:%d          mouse_y:%d"    "pos_x:%d          pos_y:%d",
+			my_Data->moupos.x,
+			my_Data->moupos.y,
+			my_Data->pos.x,
+			my_Data->pos.y
 		);
 
-		//リストのメソッドを実行
-		for (auto i = base.begin(); i != base.end(); i++) {
-			(*i)->Action(&base);//全てのオブジェクトの処理
-			
-		}
-			
-			
-		for (auto i = base.begin(); i != base.end(); i++) {
-			(*i)->Draw();//全てのオブジェクトの描画処理
+		//Player実行
+		my_Data->Action();//Action実行
+		my_Data->Draw();//描画実行
 
-		}
-		
-			
+		////リストのメソッドを実行
+		//for (auto i = base.begin(); i != base.end(); i++) {
+		//	(*i)->Action();//全てのオブジェクトの処理
+		//	
+		//}
+		//for (auto i = base.begin(); i != base.end(); i++) {
+		//	(*i)->Draw();//全てのオブジェクトの描画処理
+		//
+		//}
+
 		//リストから要素を削除(IDが-999の時に削除)
 		for (auto i = base.begin(); i != base.end(); i++)
 		{
@@ -168,8 +172,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 				break;
 			}
 		}
-
-
 
 		//描画
 		//Player_ALLを使って画面の更新
@@ -188,10 +190,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 					GetColor(255, 255, 255)
 				);
 			}
-
-
 		}
-		DrawGraphF(0.0f, 0.0f, img[Player_ALL->data->ID], TRUE);
+
+		//DrawGraphF(0.0f, 0.0f, img[Player_ALL->data->ID], TRUE);//ID表示
 	
 	
 

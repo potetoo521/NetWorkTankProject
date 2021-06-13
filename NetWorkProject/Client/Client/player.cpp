@@ -1,5 +1,8 @@
 #pragma once
 #include "character.h"
+#include "DxFunctionWin.h"
+
+
 
 //コンストラクタ
 Player::Player(float _x, float _y, char* _name) {
@@ -15,38 +18,46 @@ Player::Player(float _x, float _y, char* _name) {
 Player::Player(){}
 
 //処理
-int Player::Action(list<unique_ptr<Base*>>&base) {
+int Player::Action()
+{
 	//キー入力
-	Vec v{ 0.0f,0.0f };
-	if (CheckHitKey(KEY_INPUT_UP)) v.y = -4.0f;
-	if (CheckHitKey(KEY_INPUT_DOWN)) v.y = 4.0f;
-	if (CheckHitKey(KEY_INPUT_LEFT)) v.x = -4.0f;
-	if (CheckHitKey(KEY_INPUT_RIGHT)) v.x = 4.0f;
 	
+	if (CheckHitKey(KEY_INPUT_UP))    vec.y = -4.0f;
+	if (CheckHitKey(KEY_INPUT_DOWN))  vec.y =  4.0f;
+	if (CheckHitKey(KEY_INPUT_LEFT))  vec.x = -4.0f;
+	if (CheckHitKey(KEY_INPUT_RIGHT)) vec.x =  4.0f;
 
 		//弾丸発射目標取得処理
 	if (GetMouseInput() & MOUSE_INPUT_LEFT) {
 		//押された時
-		mouset_f = true;
 
 		//mouseカーソルの位置を取得
-		mouset_f = GetMousePoint(&moupos.mouse_x, &moupos.mouse_y);
+		GetMousePoint(&moupos.x, &moupos.y);//修正------
+			
+			float mag = sqrt(moupos.x * moupos.x + moupos.y * moupos.y);
+
+			//正規化方向ベクトル
+			moupos.x = moupos.x / mag ;
+			moupos.y = moupos.y / mag ;
+			
+			////方向ベクトルを取得
+			//moupos.x = pos.x - moupos.x;
+			//moupos.y = pos.y - moupos.y;
+			mouset_f = true;//マウス状態
 
 	}
-	else {
+	else {//押されていない時			//moupos.x = 0; moupos.y = 0;
 		mouset_f = false;
 	}
-	return 0;
+
+		return 0;
+	
 }
 
 //描画
-void Player::Draw() {
+void Player::Draw(){
 	DrawGraphF(pos.x, pos.y, img, TRUE);
 }
-
-
-
-
 
 //CheckHit関数の定義
 //float m_x = オブジェクトAの X 座標

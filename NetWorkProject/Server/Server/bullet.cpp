@@ -17,5 +17,7 @@ BulletData::BulletData(){}
 //Actioné¿çs
 int BulletData::Action(list<unique_ptr<Base*>>& data) {
 
+
+
 	return 0;
 }

@@ -5,13 +5,13 @@
 Bullet::Bullet(float _x, float _y) {
 	img = LoadGraph("image/hitokage.png");
 
-	ID = 1;
-	vec.x = 4.0f + _x;
-	vec.y = 4.0f + _y;
+	ID = 3;
+	vec.x = 0.0f + _x;
+	vec.y = 0.0f + _y;
 }
 
 //処理
-int Bullet::Action(list<Base*>* base) {
+int Bullet::Action() {
 
 	////移動ベクトルを加算
 	//pos.x += vec.x;
@@ -30,3 +30,48 @@ int Bullet::Action(list<Base*>* base) {
 void Bullet::Draw() {
 	DrawGraphF(pos.x, pos.y, img, TRUE);
 }
+
+
+
+
+
+//Objectをマウスクリックポイントの位置に移動させる
+//float m_bx    オブジェクトの座標 X
+//float m_by    オブジェクトの座標 Y
+//float* bx     オブジェクトのベクトル X
+//float* by     オブジェクトのベクトル Y
+//float speed   移動させる速さ
+////float flag    ワンクリック取得フラグ
+//void MousePointBullet(float m_bx, float m_by, float* bx, float* by, float speed, bool* flag)
+//{
+//	float m_mou_bx;//mouse情報保存
+//	float m_mou_by;
+//	//マウスの位置を取得
+//	if (*flag == true)
+//	{
+//	//	m_mou_bx = (float)Input::GetPosX();
+//	//	m_mou_by = (float)Input::GetPosY();
+//
+//		//*bx = (m_mou_bx - m_bx) * speed;
+//		//*by = (m_by - m_mou_by) * speed;
+//
+//
+//		*flag = false;
+//	}
+//
+//	float r = 0.0f;//長さを保存
+//	r = (*bx) * (*bx) + (*by) * (*by);
+//	r = sqrt(r);//r をルートを求める
+//
+//	//長さが0かどうか調べる
+//	if (r == 0.0f)
+//	{
+//		;//0なら何もしない
+//	}
+//	else
+//	{
+//		//正規化を行う
+//		*bx = 1.0f / r * (*bx);
+//		*by = 1.0f / r * -(*by);
+//	}
+//}

@@ -1,9 +1,6 @@
 #pragma once
 #include "DxLib.h"
 #include "character.h"
-
-#include <list>
-
 #include <string.h>
 #include <string>
 #include <sstream>
@@ -26,15 +23,7 @@ enum {
 	T_D
 };
 
-//移動ベクトル
-struct Vec {
-	float x, y;
-};
 
-//位置情報
-struct Pos {
-	float x, y;
-};
 /*
 //プレイヤークラス
 class Data {
@@ -56,29 +45,10 @@ public:
 class SendData {
 private:
 public:
+
 	Player data[MAX];
-	BulletData b_data[MAX];
-
 };
 
-
-#define WIDTH 800
-#define HEIGHT 600
-
-struct Pos { float x; float y; };//位置
-
-struct Vec { float x; float y; };//移動ベクトル
-
-//ベースクラス
-class Base {
-private:
-public:
-	int ID{ -1 };//オブジェクトのID
-	virtual int Action(list<unique_ptr<Base*>>&base) = 0;//処理
-	virtual void Draw() = 0;//描画
-	virtual bool CheckHit(float m_x, float m_y, float e_x, float e_y) = 0;
-
-};
 
 
 

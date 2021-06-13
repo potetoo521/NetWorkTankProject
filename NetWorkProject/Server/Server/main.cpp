@@ -37,7 +37,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 
 	//プレイヤーデータ
 	PlayerData* p_data[MAX];
-	BulletData* bullet_data[MAX];
+	
 
 	for (int i = 0; i < MAX; i++) p_data[i] = new PlayerData();
 
@@ -103,13 +103,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 						memcpy_s(&mop, sizeof(MousePos), StrBuf, sizeof(MousePos));
 						memcpy_s(&mou_l, sizeof(bool), StrBuf, sizeof(bool));
 
-						//Action()処理
-
-
 						//移動処理
 						p_data[0]->pos.x += v.x;
 						p_data[0]->pos.y += v.y;
+						if (mou_l==true)
+						{
+							p_data[0]->moupos.x = mop.x;
+							p_data[0]->moupos.y = mop.y;
 
+
+						}
+						
 
 						//弾丸発射処理---
 						if (mou_l) {//mouse左クリックされたとき真
@@ -134,33 +138,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 								}
 							}
 						}
-						//弾丸の移動処理
-						bullet_data[0]->pos.x += v.x;
-						bullet_data[0]->pos.x += v.y;
-
-
 
 						//HPの残存処理
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 						//送信データの更新
 						Send_Data->data[0].pos.x = p_data[0]->pos.x;
 						Send_Data->data[0].pos.y = p_data[0]->pos.y;
-						Send_Data->b_data[0].pos.y = bullet_data[0]->pos.x;
-						Send_Data->b_data[0].pos.y = bullet_data[0]->pos.y;
 						
 
 
@@ -278,6 +261,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 				p_data[i]->Data_Init();
 			}
 		}
+
+
+
+
+
 		//-------------------状況表示--------------------------------
 		DrawFormatString(0, 0, GetColor(255, 255, 255),
 			"PCのIPアドレス:%d.%d.%d.%d 接続ポート:%d",
