@@ -9,7 +9,7 @@
 #include <memory>
 
 //std::list<Data*>datalist;
-list<unique_ptr<Base>>datalist;
+list<unique_ptr<Base>>datalist;//全てのActorが格納される
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	_In_ LPWSTR lpCmdLine, _In_ int nShowCmd)
@@ -55,12 +55,124 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	PreparationListenNetWork(Port);
 
 	//サブスレッド
-	/*
+	thread* player[MAX];
+	
 	for (int i = 0; i < MAX; i++)
 	{
-		thread* player = new thread([&]() {});
-	}
-	*/
+		player[i] = new thread([&]() {
+
+			IPDATA ip{ 0,0,0,0 };//IPアドレス
+			int DataLength = -1;//受信データの大きさ取得用
+			int p1_NetHandle = -1;//ネットワークハンドル
+			char StrBuf[256]{ "null" };//送受信データ用
+
+			//初回接続処理
+			while (CheckHitKey(KEY_INPUT_ESCAPE) == 0) {
+				p1_NetHandle = GetNewAcceptNetWork();//ネットワークハンドル取得
+				if (p1_NetHandle != -1) {
+					NetHandle[i] = p1_NetHandle;
+					break;
+				}
+			}
+
+			//サブスレッドのメインループ
+			while (CheckHitKey(KEY_INPUT_ESCAPE) == 0) {
+				DataLength = GetNetWorkDataLength(p1_NetHandle);
+				if (DataLength != 0) {
+					//受信データをStrBufに取得
+					NetWorkRecv(p1_NetHandle, StrBuf, DataLength);
+					//接続してきたマシンのIPアドレスを取得
+					GetNetWorkIP(p1_NetHandle, &ip);
+
+					//IPアドレスから初回の接続か確認
+					if (p_data[i]->ip.d1 == ip.d1 && p_data[i]->ip.d2 == ip.d2 &&
+						p_data[i]->ip.d3 == ip.d3 && p_data[i]->ip.d4 == ip.d4
+						) {
+
+						//二回目以降の接続
+						Vec v{ 0.0f,0.0f };//移動ベクトル
+						MousePos mop{ 0,0 };   //mouse位置
+						bool mou_l;//左クリックの状態
+
+						//受信データを変換
+						memcpy_s(&v, sizeof(Vec), StrBuf, sizeof(Vec));
+						memcpy_s(&mop, sizeof(MousePos), StrBuf, sizeof(MousePos));
+						memcpy_s(&mou_l, sizeof(bool), StrBuf, sizeof(bool));
+
+						//移動処理
+						p_data[i]->pos.x += v.x;
+						p_data[i]->pos.y += v.y;
+						/*
+						//マウス左クリックされているか
+						if (mou_l==true)
+						{
+							p_data[0]->moupos.x = mop.x;
+							p_data[0]->moupos.y = mop.y;
+
+
+						}
+
+
+						//弾丸発射処理---
+						if (mou_l) {//mouse左クリックされたとき真
+
+							//Playerの位置を取得
+							float p_x = p_data[0]->pos.x;
+							float p_y = p_data[0]->pos.y;
+
+
+							//弾丸スポーン処理
+							auto a = (unique_ptr<Base>)new BulletData();
+							datalist.push_back(move(a));
+
+						}
+						//当たり判定
+						for (auto i = datalist.begin(); i != datalist.end(); i++) {
+							if ((*i)->ID == 1) {
+								Pos e_pos = ((BulletData*)(*i).get())->pos;
+								if (1) {
+
+									;
+								}
+							}
+						}*/
+
+						//HPの残存処理
+
+						//送信データの更新
+						Send_Data->data[i].pos.x = p_data[i]->pos.x;
+						Send_Data->data[i].pos.y = p_data[i]->pos.y;
+						//送信データの更新
+						Send_Data->data[i].moupos.x = p_data[i]->moupos.x;
+						Send_Data->data[i].moupos.y = p_data[i]->moupos.y;
+
+
+
+					}
+					else {
+						//初回の接続
+						//IPと名前を登録
+						p_data[i]->ip = ip;
+						p_data[i]->ID = 0;
+						memcpy_s(p_data[i]->name, sizeof(p_data[i]->name),
+							StrBuf, sizeof(p_data[i]->name));
+						//送信データの更新
+						strcpy_s(Send_Data->data[i].name, sizeof(p_data[i]->name), p_data[i]->name);
+
+						Send_Data->data[i].pos = p_data[i]->pos;//位置
+
+						Send_Data->data[i].ip = p_data[i]->ip;//IP
+
+						Send_Data->data[i].ID = p_data[i]->ID;//ID
+
+						//データを送信
+						NetWorkSend(p1_NetHandle, Send_Data, sizeof(SendData));
+					}
+				}
+			}
+		}	
+	);
+	
 
 	//p_data[0]==PlayerData
 	thread* p1 = new thread([&]()
@@ -106,6 +218,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 						//移動処理
 						p_data[0]->pos.x += v.x;
 						p_data[0]->pos.y += v.y;
+						/*
+						//マウス左クリックされているか
 						if (mou_l==true)
 						{
 							p_data[0]->moupos.x = mop.x;
@@ -137,15 +251,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 									;
 								}
 							}
-						}
+						}*/
 
 						//HPの残存処理
 
 						//送信データの更新
 						Send_Data->data[0].pos.x = p_data[0]->pos.x;
 						Send_Data->data[0].pos.y = p_data[0]->pos.y;
+						//送信データの更新
+						Send_Data->data[0].moupos.x = p_data[0]->moupos.x;
+						Send_Data->data[0].moupos.y = p_data[0]->moupos.y;
 						
-
+						 
 
 					}
 					else {
@@ -154,11 +271,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 						p_data[0]->ip = ip;
 						p_data[0]->ID = 0;
 						memcpy_s(p_data[0]->name, sizeof(p_data[0]->name), 
-															StrBuf,sizeof(p_data[0]->name));
+									StrBuf,sizeof(p_data[0]->name));
 						//送信データの更新
 						strcpy_s(Send_Data->data[0].name, sizeof(p_data[0]->name), p_data[0]->name);
+
 						Send_Data->data[0].pos = p_data[0]->pos;//位置
+
 						Send_Data->data[0].ip = p_data[0]->ip;//IP
+
 						Send_Data->data[0].ID = p_data[0]->ID;//ID
 
 						//データを送信

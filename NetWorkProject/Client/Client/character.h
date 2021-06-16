@@ -41,7 +41,7 @@ private:
 public:
 	char name[8]{ "null" }; //名前
 	Pos pos{ 0.0f,0.0f };   //位置
-	Vec vec{ 1.0f,0.0f };   //移動ベクトル
+	Vec vec{ 0.0f,0.0f };   //移動ベクトル
 	MousePos moupos{0, 0};  //mouseの位置
 	int ID{ -1 };           //オブジェクト識別用
 	IPDATA ip{ 0,0,0,0 };   //IPアドレス保存用

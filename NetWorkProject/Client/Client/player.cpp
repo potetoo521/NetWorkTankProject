@@ -21,7 +21,7 @@ Player::Player(){}
 int Player::Action()
 {
 	//ÉLÅ[ì¸óÕ
-	
+	vec.x = 0.0f,vec.y = 0.0f;
 	if (CheckHitKey(KEY_INPUT_UP))    vec.y = -4.0f;
 	if (CheckHitKey(KEY_INPUT_DOWN))  vec.y =  4.0f;
 	if (CheckHitKey(KEY_INPUT_LEFT))  vec.x = -4.0f;

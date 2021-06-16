@@ -1,6 +1,7 @@
 #pragma once
 #include "main.h"
 
+
 //コンストラクタ
 BulletData::BulletData(float _x, float _y) {
 

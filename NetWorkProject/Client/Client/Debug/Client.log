@@ -1,3 +1,10 @@
-﻿  main.cpp
+﻿  Bullet.cpp
+  main.cpp
 C:\Users\potet\OneDrive\Desktop\NetWorkTankProject\NetWorkProject\Client\Client\main.cpp(31,7): warning C4101: 'image_str': ローカル変数は 1 度も使われていません。
+  player.cpp
+C:\Users\potet\OneDrive\Desktop\NetWorkTankProject\NetWorkProject\Client\Client\player.cpp(37,14): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\potet\OneDrive\Desktop\NetWorkTankProject\NetWorkProject\Client\Client\player.cpp(40,24): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\potet\OneDrive\Desktop\NetWorkTankProject\NetWorkProject\Client\Client\player.cpp(41,24): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+  select.cpp
+  コードを生成中...
   Client.vcxproj -> C:\Users\potet\OneDrive\Desktop\NetWorkTankProject\NetWorkProject\Client\Debug\Client.exe

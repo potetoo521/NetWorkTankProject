@@ -128,12 +128,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 			Vec v{ 0.0f,0.0f };
 			MousePos m{ 0,0 };
 			bool f = false;
+
 		     v = my_Data->vec;
 			 m = my_Data->moupos;
 			 f = my_Data->mouset_f;
 			//データ送信
 			NetWorkSend(NetHandel, &v, sizeof(Vec)); //character移動Vec
-			
+	
 			NetWorkSend(NetHandel, &m, sizeof(MousePos)); //Mouse位置方向Vec
 
 			NetWorkSend(NetHandel, &f, sizeof(Pos)); //
