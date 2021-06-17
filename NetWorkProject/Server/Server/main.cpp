@@ -36,10 +36,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	char StrBuf[256] = { "NULL" };
 
 	//プレイヤーデータ
-	PlayerData* p_data[MAX];
-	
+	Player* p_data[MAX];
 
-	for (int i = 0; i < MAX; i++) p_data[i] = new PlayerData();
+
+	for (int i = 0; i < MAX; i++) p_data[i] = new Player();
 
 	//送信用データ
 	SendData* Send_Data = new SendData();
@@ -56,7 +56,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 
 	//サブスレッド
 	thread* player[MAX];
-	
+	/*
 	for (int i = 0; i < MAX; i++)
 	{
 		player[i] = new thread([&]() {
@@ -89,19 +89,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 						p_data[i]->ip.d3 == ip.d3 && p_data[i]->ip.d4 == ip.d4
 						) {
 
-						//二回目以降の接続
-						Vec v{ 0.0f,0.0f };//移動ベクトル
+						//二回目以降の接続s
+						SendData player;//移動ベクトル
 						MousePos mop{ 0,0 };   //mouse位置
 						bool mou_l;//左クリックの状態
 
 						//受信データを変換
-						memcpy_s(&v, sizeof(Vec), StrBuf, sizeof(Vec));
-						memcpy_s(&mop, sizeof(MousePos), StrBuf, sizeof(MousePos));
-						memcpy_s(&mou_l, sizeof(bool), StrBuf, sizeof(bool));
-
+						memcpy_s(&player, sizeof(SendData), StrBuf, sizeof(SendData));
+						
 						//移動処理
-						p_data[i]->pos.x += v.x;
-						p_data[i]->pos.y += v.y;
+						p_data[i]->pos.x += player.data->pos.x;
+						p_data[i]->pos.y += player.data->pos.y;
 						/*
 						//マウス左クリックされているか
 						if (mou_l==true)
@@ -135,7 +133,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 									;
 								}
 							}
-						}*/
+						}
 
 						//HPの残存処理
 
@@ -170,11 +168,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 					}
 				}
 			}
-		}	
-	);
-	
+			}
+		);
 
-	//p_data[0]==PlayerData
+*/
+
+	struct DataBox { //送受信用構造体(テスト)
+		Pos pos;
+		Vec vec;
+		MousePos mou_p;
+		bool bullet_f;
+	};
+
+
+		//p_data[0]==PlayerData
 	thread* p1 = new thread([&]()
 		{
 			IPDATA ip{ 0,0,0,0 };//IPアドレス
@@ -183,7 +190,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 			char StrBuf[256]{ "null" };//送受信データ用
 
 			//初回接続処理
-			while (CheckHitKey(KEY_INPUT_ESCAPE)==0) {
+			while (CheckHitKey(KEY_INPUT_ESCAPE) == 0) {
 				p1_NetHandle = GetNewAcceptNetWork();//ネットワークハンドル取得
 				if (p1_NetHandle != -1) {
 					NetHandle[0] = p1_NetHandle;
@@ -206,18 +213,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 						) {
 
 						//二回目以降の接続
-						Vec v{ 0.0f,0.0f };//移動ベクトル
-						MousePos mop{ 0,0 };   //mouse位置
-						bool mou_l;//左クリックの状態
+						DataBox databox{0};//使用するデータを格納用
 
 						//受信データを変換
-						memcpy_s(&v, sizeof(Vec), StrBuf, sizeof(Vec));
-						memcpy_s(&mop, sizeof(MousePos), StrBuf, sizeof(MousePos));
-						memcpy_s(&mou_l, sizeof(bool), StrBuf, sizeof(bool));
+						memcpy_s(&databox, sizeof(DataBox), StrBuf, sizeof(DataBox));
 
 						//移動処理
-						p_data[0]->pos.x += v.x;
-						p_data[0]->pos.y += v.y;
+						p_data[0]->pos.x += databox.vec.x;
+						p_data[0]->pos.y += databox.vec.y;
+
+						if (databox.bullet_f==true)
+						{
+							p_data[0]->moupos.x = databox.mou_p.x;
+							p_data[0]->moupos.y = databox.mou_p.y;
+						}
 						/*
 						//マウス左クリックされているか
 						if (mou_l==true)
@@ -227,7 +236,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 
 
 						}
-						
+
 
 						//弾丸発射処理---
 						if (mou_l) {//mouse左クリックされたとき真
@@ -235,8 +244,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 							//Playerの位置を取得
 							float p_x = p_data[0]->pos.x;
 							float p_y = p_data[0]->pos.y;
-							
-							
+
+
 							//弾丸スポーン処理
 							auto a = (unique_ptr<Base>)new BulletData();
 							datalist.push_back(move(a));
@@ -261,8 +270,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 						//送信データの更新
 						Send_Data->data[0].moupos.x = p_data[0]->moupos.x;
 						Send_Data->data[0].moupos.y = p_data[0]->moupos.y;
-						
-						 
+
+
 
 					}
 					else {
@@ -270,8 +279,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 						//IPと名前を登録
 						p_data[0]->ip = ip;
 						p_data[0]->ID = 0;
-						memcpy_s(p_data[0]->name, sizeof(p_data[0]->name), 
-									StrBuf,sizeof(p_data[0]->name));
+						memcpy_s(p_data[0]->name, sizeof(p_data[0]->name),
+							StrBuf, sizeof(p_data[0]->name));
 						//送信データの更新
 						strcpy_s(Send_Data->data[0].name, sizeof(p_data[0]->name), p_data[0]->name);
 
@@ -290,7 +299,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	);
 
 	//p_data[1]
-	thread* p2 = new thread([&]() 
+	thread* p2 = new thread([&]()
 		{
 			IPDATA ip{ 0,0,0,0 };//IPアドレス
 			int DataLength = -1;//受信データの大きさ取得用
@@ -352,6 +361,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 			}
 		}
 	);
+
 	//p_da1ta[2]
 	thread* p3 = new thread([&]() {});
 	//p_data[3]
@@ -382,10 +392,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 			}
 		}
 
-
-
-
-
 		//-------------------状況表示--------------------------------
 		DrawFormatString(0, 0, GetColor(255, 255, 255),
 			"PCのIPアドレス:%d.%d.%d.%d 接続ポート:%d",
@@ -399,8 +405,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 		for (int i = 0; i < MAX; i++)
 		{
 			//プレイヤー状況表示
-			DrawFormatString(0, i*48+32, GetColor(255, 255, 255),
-				"スレッド1 IP:%d.%d.%d.%d  name=%8s  x=%f:y=%f \n mou_x=%d;mou_y=%d",
+			DrawFormatString(0, i * 48 + 32, GetColor(255, 255, 255),
+				"スレッド%d IP:%d.%d.%d.%d  name=%8s  x=%f:y=%f \n mou_x=%f;mou_y=%f",
+				p_data[i]->ID,
 				p_data[i]->ip.d1,
 				p_data[i]->ip.d2,
 				p_data[i]->ip.d3,
@@ -416,19 +423,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 		ScreenFlip();//画面更新
 		if ((ProcessMessage() == -1))break;
 	}
-	p1->join();
-	p2->join();
-	p3->join();
-	p4->join();
-	delete p1;
-	delete p2;
-	delete p3;
-	delete p4;
+		p1->join();
+		p2->join();
+		p3->join();
+		p4->join();
+		delete p1;
+		delete p2;
+		delete p3;
+		delete p4;
 
-	DxLib_End();
-	return 0;
+		DxLib_End();
+		return 0;
 }
-
 
 
 

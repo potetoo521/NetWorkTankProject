@@ -34,7 +34,7 @@ struct Pos {
 
 //mouseの位置情報
 struct MousePos {
-	int x, y;
+	float x, y;
 };
 
 
@@ -51,7 +51,7 @@ public:
 };
 
 //プレイヤークラス
-class PlayerData :public Base{
+class Player :public Base{
 private:
 	int img{0};
 public:
@@ -65,8 +65,8 @@ public:
 	bool mouset_f = false;//mouse座標取得判定
 
 	//コンストラクタ
-	PlayerData();
-	PlayerData(float _x, float _y, char* _name);
+	Player();
+	Player(float _x, float _y, char* _name);
 
 	
 	int Action(list<unique_ptr<Base*>>& data);
@@ -103,8 +103,8 @@ public:
 class SendData {
 private:
 public:
-	PlayerData data[MAX];
-	BulletData b_data[MAX];
+	Player data[MAX];
+	//BulletData b_data[MAX];
 };
 
 

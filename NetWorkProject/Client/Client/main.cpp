@@ -2,10 +2,10 @@
 //Dxライブラリ使用
 #pragma once
 #include "main.h"
-#include "character.h"
+//#include "character.h"
 #include <memory>
 //リスト
-std::list<unique_ptr<Base>>base;
+std::list<unique_ptr<Base>>datalist;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	_In_ LPWSTR lpCmdLine, _In_ int nShowCmd) 
@@ -68,7 +68,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	Player* my_Data = new Player(0.0f, 0.0f, name);
 
 	auto a = (unique_ptr<Base>) my_Data;
-	base.push_back(move(a));
+	datalist.emplace_back(move(a));
 
 
 	//初回接続(サーバーへ接続）
@@ -99,12 +99,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 			WaitKey();
 			break;
 		}
-		else {
+		else 
+		{
 			//接続中
 			DrawString(0, 0, "接続確立中・・・", GetColor(255, 255, 255));
 		}
 		ScreenFlip();
 	}
+
+	struct DataBox { //送受信用構造体(テスト)
+		Pos pos;
+		Vec vec;
+		MousePos mou_p;
+		bool bullet_f;
+	};
 
 	//メインループ(Escキーで終了)
 	while (CheckHitKey(KEY_INPUT_ESCAPE) == 0) {
@@ -125,23 +133,26 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 			//データを受信していない場合
 			
 			//移動処理
-			Vec v{ 0.0f,0.0f };
-			MousePos m{ 0,0 };
-			bool f = false;
+			DataBox databox{ 0 };
 
-		     v = my_Data->vec;
-			 m = my_Data->moupos;
-			 f = my_Data->mouset_f;
+		    databox.vec      = my_Data->vec;     //移動 Vec情報
+			databox.mou_p    = my_Data->moupos;  //mouse Pos情報
+			databox.bullet_f = my_Data->mouset_f;//mouse bool情報
+
+			DrawFormatString(0, 96, GetColor(255, 255, 255),
+				"mouse_x:%d          mouse_y:%d"    "pos_x:%d          pos_y:%d",
+				my_Data->moupos.x,
+				my_Data->moupos.y,
+				my_Data->pos.x,
+				my_Data->pos.y
+			);
+
 			//データ送信
-			NetWorkSend(NetHandel, &v, sizeof(Vec)); //character移動Vec
+			NetWorkSend(NetHandel, &databox, sizeof(DataBox)); //CharacterData送信
 	
-			NetWorkSend(NetHandel, &m, sizeof(MousePos)); //Mouse位置方向Vec
-
-			NetWorkSend(NetHandel, &f, sizeof(Pos)); //
-
 		}
 
-		DrawFormatString(0, 16, GetColor(255, 255, 255),
+		DrawFormatString(0, 256, GetColor(255, 255, 255),
 			"mouse_x:%d          mouse_y:%d"    "pos_x:%d          pos_y:%d",
 			my_Data->moupos.x,
 			my_Data->moupos.y,
@@ -150,26 +161,28 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 		);
 
 		//Player実行
-		my_Data->Action();//Action実行
-		my_Data->Draw();//描画実行
+		//my_Data->Action(datalist);//Action実行
+		//my_Data->Draw();//描画実行
+		
 
-		////リストのメソッドを実行
-		//for (auto i = base.begin(); i != base.end(); i++) {
-		//	(*i)->Action();//全てのオブジェクトの処理
-		//	
-		//}
-		//for (auto i = base.begin(); i != base.end(); i++) {
-		//	(*i)->Draw();//全てのオブジェクトの描画処理
-		//
-		//}
+
+		//リストのメソッドを実行
+		for (auto i = datalist.begin(); i != datalist.end(); i++) {
+			(*i)->Action(datalist);//全てのオブジェクトのAction処理
+			
+		}
+		for (auto i = datalist.begin(); i != datalist.end(); i++) {
+			(*i)->Draw();//全てのオブジェクトの描画処理
+		
+		}
 
 		//リストから要素を削除(IDが-999の時に削除)
-		for (auto i = base.begin(); i != base.end(); i++)
+		for (auto i = datalist.begin(); i != datalist.end(); i++)
 		{
 			if ((*i)->ID == DESTROY_ID)//IDが-999ならdelete
 			{
 				//リストから削除
-				i = base.erase(i);
+				i = datalist.erase(i);
 				break;
 			}
 		}
@@ -178,12 +191,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 		//Player_ALLを使って画面の更新
 		for (int i = 0; i < MAX; i++) {
 			if (Player_ALL->data[i].ID != -1) {
+
+				//Action実行
+				
+
 				//キャラ
-				/*DrawGraphF(Player_ALL->data[i].pos.x,
+				DrawGraphF(Player_ALL->data[i].pos.x,
 					Player_ALL->data[i].pos.y,
 					img[i],
 					TRUE
-				);*/
+				);
 				//名前
 				DrawStringF(Player_ALL->data[i].pos.x,
 					Player_ALL->data[i].pos.y,

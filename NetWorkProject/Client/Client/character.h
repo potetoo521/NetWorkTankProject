@@ -5,6 +5,7 @@
 #include <string.h>
 #include <string>
 #include <sstream>
+using namespace std;
 
 //移動ベクトル
 struct Vec {
@@ -18,7 +19,7 @@ struct Pos {
 
 //mouse位置を取得
 struct MousePos {
-	int x,y;
+	float x,y;
 };
 
 //ベースクラス
@@ -26,7 +27,7 @@ class Base {
 private:
 public:
 	int ID{ -1 };//オブジェクトのID
-	virtual int Action() = 0;//処理
+	virtual int Action(list<unique_ptr<Base>>& base) = 0;//処理
 	virtual void Draw() = 0;//描画
 	//virtual bool CheckHit(float m_x, float m_y, float e_x, float e_y) = 0;
 
@@ -52,7 +53,7 @@ public:
 	Player();
 	Player(float _x, float _y, char* _name);
 
-	int Action();
+	int Action(list<unique_ptr<Base>>& base);
 	void Draw();
 	bool CheckHit(float m_x, float m_y, float e_x, float e_y);
 
@@ -68,9 +69,9 @@ public:
 	Pos pos{ 0.0f,0.0f };//位置
 	Vec vec{ 0.0f,0.0f };//移動ベクトル
 	//コンストラクタ
-	Bullet(float _x,float _y);
+	Bullet(float _x,float _y,float _vx,float _vy);
 
-	int Action();
+	int Action(list<unique_ptr<Base>>& base);
 	void Draw();
 	//bool CheckHit(float m_x, float m_y, float e_x, float e_y);
 

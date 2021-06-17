@@ -2,16 +2,19 @@
 #include "character.h"
 
 //コンストラクタ
-Bullet::Bullet(float _x, float _y) {
+Bullet::Bullet(float _x, float _y,float _vx,float _vy) {
 	img = LoadGraph("image/hitokage.png");
 
 	ID = 3;
-	vec.x = 0.0f + _x;
-	vec.y = 0.0f + _y;
+	pos.x = _x;//出現位置
+	pos.y = _y;
+
+	vec.x = _x;//方向ベクトル
+	vec.y = _y;
 }
 
 //処理
-int Bullet::Action() {
+int Bullet::Action(list<unique_ptr<Base>>& base) {
 
 	////移動ベクトルを加算
 	//pos.x += vec.x;

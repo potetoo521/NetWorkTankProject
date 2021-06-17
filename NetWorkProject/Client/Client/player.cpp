@@ -18,7 +18,7 @@ Player::Player(float _x, float _y, char* _name) {
 Player::Player(){}
 
 //処理
-int Player::Action()
+int Player::Action(list<unique_ptr<Base>>& base)
 {
 	//キー入力
 	vec.x = 0.0f,vec.y = 0.0f;
@@ -29,34 +29,55 @@ int Player::Action()
 
 		//弾丸発射目標取得処理
 	if (GetMouseInput() & MOUSE_INPUT_LEFT) {
-		//押された時
 
-		//mouseカーソルの位置を取得
-		GetMousePoint(&moupos.x, &moupos.y);//修正------
-			
+		//押された時
+		if (mouset_f == false) {//mouseホールド状態確認
+
+			mouset_f = true;//マウス状態
+
+			int x = (int)moupos.x;
+			int y = (int)moupos.y;
+
+			//mouseカーソルの位置を取得
+			GetMousePoint(&x, &y);
+			moupos.x = (float)x; //mouse位置を格納
+			moupos.y = (float)y;
+
 			float mag = sqrt(moupos.x * moupos.x + moupos.y * moupos.y);
 
 			//正規化方向ベクトル
-			moupos.x = moupos.x / mag ;
-			moupos.y = moupos.y / mag ;
-			
-			////方向ベクトルを取得
-			//moupos.x = pos.x - moupos.x;
-			//moupos.y = pos.y - moupos.y;
-			mouset_f = true;//マウス状態
+			moupos.x = moupos.x / mag;
+			moupos.y = moupos.y / mag;
 
+			//弾丸作成
+			Bullet* bullet = new Bullet(pos.x,pos.y,moupos.x, moupos.y);//位置と方向ベクトル
+			auto add = (unique_ptr<Base>) bullet;
+			base.emplace_back(move(add));//リストに追加
+
+		}
 	}
-	else {//押されていない時			//moupos.x = 0; moupos.y = 0;
+	else {//押されていない時
 		mouset_f = false;
 	}
 
-		return 0;
+
+	DrawFormatString(0, 64, GetColor(255, 255, 255),
+		"mouse_x:%f          mouse_y:%f"    "pos_x:%d          pos_y:%d",
+		moupos.x,
+		moupos.y,
+		pos.x,
+		pos.y
+	);
+
+	return 0;
 	
 }
 
 //描画
 void Player::Draw(){
+
 	DrawGraphF(pos.x, pos.y, img, TRUE);
+
 }
 
 //CheckHit関数の定義

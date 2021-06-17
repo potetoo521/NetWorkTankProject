@@ -2,7 +2,7 @@
 #include "main.h"
 
 //コンストラクタ
-PlayerData::PlayerData(float _x, float _y, char* _name) {
+Player::Player(float _x, float _y, char* _name) {
 	pos.x = _x;
 	pos.y = _y;
 
@@ -10,7 +10,7 @@ PlayerData::PlayerData(float _x, float _y, char* _name) {
 }
 
 //イニシャライズ(初期化)
-void PlayerData::Data_Init() {
+void Player::Data_Init() {
 	strcpy_s(name, "null");
 
 	ip.d1 = 0; ip.d2 = 0; ip.d3 = 0; ip.d4 = 0;
@@ -22,10 +22,10 @@ void PlayerData::Data_Init() {
 
 }
 
-PlayerData::PlayerData() {}
+Player::Player() {}
 
 //Action実行
-int PlayerData::Action(list<unique_ptr<Base*>>& data) {
+int Player::Action(list<unique_ptr<Base*>>& data) {
 
 	return 0;
 }

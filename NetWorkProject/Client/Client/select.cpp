@@ -25,4 +25,6 @@ IPDATA IP_set() {
 		if (KeyInputNumber(16, 64, 1, 0, FALSE)) break;
 	}
 	return ip;
+
+
 }
