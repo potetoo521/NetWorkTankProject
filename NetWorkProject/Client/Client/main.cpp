@@ -110,8 +110,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	struct DataBox { //送受信用構造体(テスト)
 		Pos pos;
 		Vec vec;
-		MousePos mou_p;
-		bool bullet_f;
+		MousePos mou_p;//mouseの方向ベクトル格納用
+		bool bullet_f; //クリックflag
+		list<unique_ptr<Base>> sendData;//弾丸情報を格納用
 	};
 
 	//メインループ(Escキーで終了)
@@ -133,19 +134,22 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 			//データを受信していない場合
 			
 			//移動処理
-			DataBox databox{ 0 };
+			SendData* databox;
 
 		    databox.vec      = my_Data->vec;     //移動 Vec情報
 			databox.mou_p    = my_Data->moupos;  //mouse Pos情報
 			databox.bullet_f = my_Data->mouset_f;//mouse bool情報
+			databox.sendData = datalist;         //datalist情報
+			
 
-			DrawFormatString(0, 96, GetColor(255, 255, 255),
+
+		/*	DrawFormatString(0, 96, GetColor(255, 255, 255),
 				"mouse_x:%d          mouse_y:%d"    "pos_x:%d          pos_y:%d",
 				my_Data->moupos.x,
 				my_Data->moupos.y,
 				my_Data->pos.x,
 				my_Data->pos.y
-			);
+			);*/
 
 			//データ送信
 			NetWorkSend(NetHandel, &databox, sizeof(DataBox)); //CharacterData送信

@@ -1,0 +1,7 @@
+﻿  enemy.cpp
+C:\Users\GA3\Desktop\list\list\main.h(2,10): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  main.cpp
+C:\Users\GA3\Desktop\list\list\main.h(2,10): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  player.cpp
+C:\Users\GA3\Desktop\list\list\main.h(2,10): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  コードを生成中...

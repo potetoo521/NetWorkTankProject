@@ -6,6 +6,7 @@
 #include <sstream>
 
 #define MAX 4 //接続数
+#define MAXBULLET 10 //弾丸数
 #define WIDTH 800 //windowサイズ 横
 #define HEIGHT 600 //windowサイズ 縦
 
@@ -47,6 +48,7 @@ private:
 public:
 
 	Player data[MAX];
+	Bullet bullet[MAXBULLET];
 };
 
 

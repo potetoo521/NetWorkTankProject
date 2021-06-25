@@ -35,24 +35,27 @@ int Player::Action(list<unique_ptr<Base>>& base)
 
 			mouset_f = true;//マウス状態
 
-			int x = (int)moupos.x;
+			int x = (int)moupos.x;//int型にキャスト
 			int y = (int)moupos.y;
 
-			//mouseカーソルの位置を取得
+			//mouseカーソルの位置を取得(int型)
 			GetMousePoint(&x, &y);
+
 			moupos.x = (float)x; //mouse位置を格納
 			moupos.y = (float)y;
 
-			float mag = sqrt(moupos.x * moupos.x + moupos.y * moupos.y);
+			moupos.x = moupos.x - pos.x;//方向ベクトル取得
+			moupos.y = moupos.y - pos.y;
 
-			//正規化方向ベクトル
-			moupos.x = moupos.x / mag;
-			moupos.y = moupos.y / mag;
+			float mag = sqrt(moupos.x * moupos.x + moupos.y * moupos.y);//長さ
+
+			moupos.x = -moupos.x / mag;//正規化方向ベクトル
+			moupos.y = -moupos.y / mag;
 
 			//弾丸作成
 			Bullet* bullet = new Bullet(pos.x,pos.y,moupos.x, moupos.y);//位置と方向ベクトル
 			auto add = (unique_ptr<Base>) bullet;
-			base.emplace_back(move(add));//リストに追加
+			base.emplace_back(move(add));//リストにbulletを追加
 
 		}
 	}

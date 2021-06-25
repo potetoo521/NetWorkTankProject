@@ -178,6 +178,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 		Vec vec;
 		MousePos mou_p;
 		bool bullet_f;
+		list<unique_ptr<Base>> RecData;//’eŠÛî•ñ‚ðŠi”[—p
 	};
 
 
@@ -221,6 +222,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 						//ˆÚ“®ˆ—
 						p_data[0]->pos.x += databox.vec.x;
 						p_data[0]->pos.y += databox.vec.y;
+		  
 
 						if (databox.bullet_f==true)
 						{

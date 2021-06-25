@@ -17,8 +17,8 @@ Bullet::Bullet(float _x, float _y,float _vx,float _vy) {
 int Bullet::Action(list<unique_ptr<Base>>& base) {
 
 	////移動ベクトルを加算
-	//pos.x += vec.x;
-	//pos.y += vec.y;
+	pos.x += vec.x;
+	pos.y += vec.y;
 
 	////画面の端に来たら、移動ベクトルを逆にする
 	//if (pos.x < 0 || pos.x>736.0f)vec.x = -vec.x;

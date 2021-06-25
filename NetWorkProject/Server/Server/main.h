@@ -8,6 +8,7 @@
 #include <list>
 
 #define MAX 2 //接続数
+#define MAXBULLET 10 //最大弾丸数
 #define WIDTH 800 //windowサイズ 横
 #define HEIGHT 600 //windowサイズ 縦
 
@@ -104,7 +105,7 @@ class SendData {
 private:
 public:
 	Player data[MAX];
-	//BulletData b_data[MAX];
+	BulletData bullet_data[MAXBULLET];
 };
 
 
