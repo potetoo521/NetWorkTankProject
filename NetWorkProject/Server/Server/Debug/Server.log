@@ -1,3 +1,5 @@
 ﻿  main.cpp
-C:\Users\GA3\Desktop\NetWorkTankProject\NetWorkProject\Server\Server\main.cpp(58,10): warning C4101: 'player': ローカル変数は 1 度も使われていません。
-  Server.vcxproj -> C:\Users\GA3\Desktop\NetWorkTankProject\NetWorkProject\Server\Debug\Server.exe
+C:\Users\potet\OneDrive\Desktop\NetWorkTankProject\NetWorkProject\Server\Server\main.cpp(58,10): warning C4101: 'player': ローカル変数は 1 度も使われていません。
+  player.cpp
+  コードを生成中...
+  Server.vcxproj -> C:\Users\potet\OneDrive\Desktop\NetWorkTankProject\NetWorkProject\Server\Debug\Server.exe

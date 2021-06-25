@@ -44,7 +44,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	//送受信データ処理用
 	char StrBuf[256] = { "null" };//256バイトまで
 
-	//全てのプレイヤーデータ
+	//全てのプレイヤーデータが入る
 	SendData* Player_ALL = new SendData();
 
 	//通信関係
@@ -140,20 +140,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 			databox.bullet_f = my_Data->mouset_f;//mouse bool情報
 
 			DrawFormatString(0, 96, GetColor(255, 255, 255),
-				"mouse_x:%d          mouse_y:%d"    "pos_x:%d          pos_y:%d",
+				"mouse_x:%f          mouse_y:%f"    "vec_x:%f          vec_y:%f",
 				my_Data->moupos.x,
 				my_Data->moupos.y,
-				my_Data->pos.x,
-				my_Data->pos.y
+				my_Data->vec.x,
+				my_Data->vec.y
 			);
 
 			//データ送信
-			NetWorkSend(NetHandel, &databox, sizeof(DataBox)); //CharacterData送信
+			NetWorkSend(NetHandel, &databox, sizeof(DataBox)); //DataBox送信
 	
 		}
 
 		DrawFormatString(0, 256, GetColor(255, 255, 255),
-			"mouse_x:%d          mouse_y:%d"    "pos_x:%d          pos_y:%d",
+			"mouse_x:%f          mouse_y:%f"    "pos_x:%f          pos_y:%f",
 			my_Data->moupos.x,
 			my_Data->moupos.y,
 			my_Data->pos.x,
@@ -164,8 +164,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 		//my_Data->Action(datalist);//Action実行
 		//my_Data->Draw();//描画実行
 		
-
-
 		//リストのメソッドを実行
 		for (auto i = datalist.begin(); i != datalist.end(); i++) {
 			(*i)->Action(datalist);//全てのオブジェクトのAction処理

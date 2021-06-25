@@ -42,7 +42,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	for (int i = 0; i < MAX; i++) p_data[i] = new Player();
 
 	//送信用データ
-	SendData* Send_Data = new SendData();
+	SendData* Send_Data = new SendData();//全てのプレイヤー情報が入る
 
 	//ネットワーク関係
 	IPDATA IP;
@@ -264,6 +264,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 
 						//HPの残存処理
 
+
+
+
+
+
 						//送信データの更新
 						Send_Data->data[0].pos.x = p_data[0]->pos.x;
 						Send_Data->data[0].pos.y = p_data[0]->pos.y;
@@ -435,6 +440,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 		DxLib_End();
 		return 0;
 }
+
+
 
 
 
