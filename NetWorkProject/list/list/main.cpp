@@ -85,15 +85,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 }
 
 //当たり判定
-bool CheckHit(float m_x, float m_y, float e_x, float e_y, float p_pixel, float e_pixel) {
+bool CheckHit(Pos a_pos, Pos b_pos, GraphSize a_pixel, GraphSize b_pixel) {
 
-	float magLen = (p_pixel + e_pixel)/2;
+	float magLen = (a_pixel.x + b_pixel.x)/2;//(仮)長さx
 
-	float len = sqrtf((e_x - m_x) * (e_x - m_x) + (e_y - m_y) * (e_y - m_y));//内積の長さを取得
-	
+	float len = sqrtf((b_pos.x - a_pos.x) * (b_pos.x - a_pos.x) + (b_pos.y - a_pos.y) * (b_pos.y - a_pos.y));//内積の長さを取得
+
+	//DrawCircle(a_pos.x+a_pixel.x/2, a_pos.y+a_pixel.y/2, a_pixel.x, GetColor(255, 255, 0), TRUE);//円を描画
+
+
 	if (len <= magLen)//MagLen == lenまでの距離
 	{
-		return true;//判定結果当たっている( 真 )を返す
+		return true ;//判定結果当たっている( 真 )を返す
 	}
 	else
 	{
@@ -102,14 +105,22 @@ bool CheckHit(float m_x, float m_y, float e_x, float e_y, float p_pixel, float e
 };
 
 //画面の端に来たら画面外に出ない用に位置を修正する
-void ScreenHitCheck(float *x,float *y,int gr_x,int gr_y) {
+void ScreenHitCheck(Pos* pos,GraphSize gr) {
 
 	//x軸
-	if (*x + gr_x > WIDTH)  *x  = WIDTH  - gr_x;
+	if (pos->x + gr.x > WIDTH)  pos->x  = WIDTH  - gr.x;
 
-	if (*x < 0) *x = 0;
+	if (pos->x < 0) pos->x = 0;
 	//y軸
-	if (*y + gr_y > HEIGHT) *y  = HEIGHT - gr_y;
+	if (pos->y + gr.y > HEIGHT) pos->y  = HEIGHT - gr.y;
 
-	if (*y < 0) *y = 0;
+	if (pos->y < 0) pos->y = 0;
 }
+
+//当たり判定確認用
+void CheckHitDraw(Pos pos,GraphSize p_pixel) {
+
+	float len = sqrtf((p_pixel.x) * (p_pixel.y)/2);//内積の長さを取得
+
+	DrawCircle(pos.x, pos.y, len, GetColor(255, 255, 0), TRUE);//円を描画
+};

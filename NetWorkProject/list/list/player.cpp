@@ -7,9 +7,6 @@ Player::Player() {
   	img = LoadGraph("image/maid.png");
 	GetGraphSize(img, &gr_size.x, &gr_size.y);//画像サイズを取得
 
-
-	//gr_size.x = gr_size.x / 2;//画像サイズ半
-	//gr_size.y = gr_size.y / 2;
 	pos.x = 100.0f;//テスト
 	pos.y = 100.0f;
 
@@ -67,7 +64,7 @@ int Player::Action(list<unique_ptr<Base>>& base) {
 	if (CheckHitKey(KEY_INPUT_SPACE)) {//デバッグ用bullet削除
 
 		for (auto i = base.begin(); i != base.end(); i++) {
-			if (((Bullet*)(*i).get())->ID == 1)
+			if (((Bullet*)(*i).get())->ID == 1) //テストid
 			{
 				i = base.erase(i);
 				if (i == base.end())break;
@@ -76,7 +73,7 @@ int Player::Action(list<unique_ptr<Base>>& base) {
 	}
 
 	//画面外当たり判定
-	ScreenHitCheck(&pos.x, &pos.y,gr_size.x+gr_size.x,gr_size.y+gr_size.y);
+	ScreenHitCheck(&pos,gr_size);
 
 	//移動ベクトルを加算
 	pos.x += v.x;
@@ -95,7 +92,7 @@ void Player::Draw() {
 
 
 	float len = sqrtf( pos.x *  pos.x +  pos.y * pos.y);//内積の長さを取得
-	DrawCircle(pos.x, pos.y, sqrtf(pos.x * pos.x + pos.y * pos.y), GetColor(255, 0, 0), TRUE);
+	//DrawCircle(pos.x, pos.y, sqrtf(gr_size.x*gr_size.x + gr_size.y*gr_size.y), GetColor(255, 0, 0), TRUE);
 
 
 	//マウス位置を表示

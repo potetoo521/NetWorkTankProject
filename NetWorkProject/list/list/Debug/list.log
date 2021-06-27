@@ -1,8 +1,9 @@
-﻿  player.cpp
-C:\Users\GA3\Desktop\list\list\player.cpp(94,21): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\GA3\Desktop\list\list\player.cpp(94,14): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\GA3\Desktop\list\list\player.cpp(98,32): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\GA3\Desktop\list\list\player.cpp(98,23): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\GA3\Desktop\list\list\player.cpp(98,16): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\GA3\Desktop\list\list\player.cpp(102,27): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-  list.vcxproj -> C:\Users\GA3\Desktop\list\Debug\list.exe
+﻿  main.cpp
+C:\Users\potet\OneDrive\Desktop\NetWorkTankProject\NetWorkProject\list\list\main.cpp(18,22): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\potet\OneDrive\Desktop\NetWorkTankProject\NetWorkProject\list\list\main.cpp(18,15): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\potet\OneDrive\Desktop\NetWorkTankProject\NetWorkProject\list\list\main.cpp(90,15): warning C4244: '初期化中': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\potet\OneDrive\Desktop\NetWorkTankProject\NetWorkProject\list\list\main.cpp(123,45): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\potet\OneDrive\Desktop\NetWorkTankProject\NetWorkProject\list\list\main.cpp(125,27): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\potet\OneDrive\Desktop\NetWorkTankProject\NetWorkProject\list\list\main.cpp(125,23): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\potet\OneDrive\Desktop\NetWorkTankProject\NetWorkProject\list\list\main.cpp(125,16): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+  list.vcxproj -> C:\Users\potet\OneDrive\Desktop\NetWorkTankProject\NetWorkProject\list\Debug\list.exe

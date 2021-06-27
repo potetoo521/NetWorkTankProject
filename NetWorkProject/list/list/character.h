@@ -2,20 +2,6 @@
 #include "main.h"
 
 
-struct MousePos { float x; float y; };//mouseベクトルを取得
-
-struct GraphSize { int x; int y; };//画像サイズ
-
-struct Pos { float x; float y; };//位置
-
-struct Vec { float x; float y; };//移動ベクトル
-
-//CheckHit関数の宣言
-bool CheckHit(float m_x, float m_y, float e_x, float e_y, float p_pixel, float e_pixel);
-
-//ScreenHitCheck関数の宣言
-void ScreenHitCheck(float* x, float* y, int gr_x, int gr_y);
-
 //ベースクラス
 class Base {
 private:

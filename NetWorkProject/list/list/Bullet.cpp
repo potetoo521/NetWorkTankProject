@@ -8,11 +8,11 @@ Bullet::Bullet(float _x, float _y, float _vx, float _vy,int _id) {
 
 	GetGraphSize(img, &gr_size.x, &gr_size.y);//画像サイズを取得
 
-	posd.x = _x;
+	posd.x = _x;//デバッグ用
 	posd.y = _y;
 
 	owner_Id = _id;//作成元objID
-	ID = 1;
+	ID = 1;    //弾丸ID
 	pos.x = _x;//出現位置
 	pos.y = _y;
 
@@ -45,16 +45,16 @@ int Bullet::Action(list<unique_ptr<Base>>& base) {
 
 		auto data =((Player*)(*i).get());//Playerデータをキャスト
 		
-		if (data->ID != owner_Id && ID != Destroy_ID && data->ID!=ID){  //作成元オブジェクトではない&破壊中でない
+		if (data->ID != owner_Id && ID != Destroy_ID && data->ID!=ID){  //作成元obj & 破壊中 & 自身 ではない時
 
-			Pos p_pos{ 0.0f,0.0f }; //位置
-			GraphSize p_size{ 0,0 };//画像サイズ
+			Pos d_pos{ 0.0f,0.0f }; //位置
+			GraphSize d_size{ 0,0 };//画像サイズ
 
-			p_pos  = data->pos;
-			p_size = data->gr_size;
+			d_pos  = data->pos;
+			d_size = data->gr_size;
 			
 			//当たり判定
-			if (CheckHit( pos.x, pos.y, p_pos.x, p_pos.y, gr_size.x, p_size.x )) {
+			if (CheckHit( pos, d_pos, gr_size, d_size )) {
 				ID = Destroy_ID;//リストから削除
 			}
 			if (i == base.end())break;
@@ -68,7 +68,7 @@ int Bullet::Action(list<unique_ptr<Base>>& base) {
 //描画
 void Bullet::Draw() {
 	//当たり判定エリア表示
-	DrawCircle(pos.x , pos.y , sqrtf(20), GetColor(0, 255, 0), TRUE);
+	//DrawCircle(pos.x + gr_size.x / 2, pos.y + gr_size.y / 2, sqrtf(128) , GetColor(0, 255, 0), TRUE);
 
 	DrawLine(posd.x , posd.y , pos.x, pos.y, GetColor(255, 100, 255));//線を描画
 	//画像描画
