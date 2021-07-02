@@ -5,8 +5,8 @@
 Player::Player() {
 	ID = 0;
   	img = LoadGraph("image/maid.png");
-	GetGraphSize(img, &gr_size.x, &gr_size.y);//画像サイズを取得
 
+	GetGraphSize(img, &gr_size.x, &gr_size.y);//画像サイズを取得
 
 	//gr_size.x = gr_size.x / 2;//画像サイズ半
 	//gr_size.y = gr_size.y / 2;
@@ -15,7 +15,7 @@ Player::Player() {
 
 	SetMouseDispFlag(FALSE);//マウス表示なし
 
-	sound = LoadSoundMem("sound/ES_SomethingGood.wav");
+	//sound = LoadSoundMem("sound/ES_SomethingGood.wav");
 }
 
 //処理
@@ -44,17 +44,10 @@ int Player::Action(list<unique_ptr<Base>>& base) {
 			moupos.x = (float)x;  //mouse位置を格納
 			moupos.y = (float)y;
 
-			moupos.x = moupos.x - pos.x ;//方向ベクトル取得
-			moupos.y = moupos.y - pos.y ;
-
-			float mag = sqrtf(moupos.x * moupos.x + moupos.y * moupos.y);//長さを取得
-
-			//正規化方向ベクトル
-			moupos.x = moupos.x / mag;
-			moupos.y = moupos.y / mag;
+			mouvec = Normalize_Vec(Direction_Vec(moupos, pos));//方向ベクトルを正規化
 
 			//弾丸作成
-			Bullet* bullet = new Bullet(pos.x, pos.y, moupos.x, moupos.y,ID);//位置と方向ベクトル
+			Bullet* bullet = new Bullet(pos.x, pos.y, mouvec.x, mouvec.y,ID);//位置と方向ベクトル
 			auto add = (unique_ptr<Bullet>) bullet;
 			base.emplace_back(move(add));//リストにbulletを追加
 
@@ -76,7 +69,7 @@ int Player::Action(list<unique_ptr<Base>>& base) {
 	}
 
 	//画面外当たり判定
-	ScreenHitCheck(&pos.x, &pos.y,gr_size.x+gr_size.x,gr_size.y+gr_size.y);
+	ScreenHitCheck(&pos.x, &pos.y,gr_size.x,gr_size.y);
 
 	//移動ベクトルを加算
 	pos.x += v.x;
@@ -95,7 +88,7 @@ void Player::Draw() {
 
 
 	float len = sqrtf( pos.x *  pos.x +  pos.y * pos.y);//内積の長さを取得
-	DrawCircle(pos.x, pos.y, sqrtf(pos.x * pos.x + pos.y * pos.y), GetColor(255, 0, 0), TRUE);
+//	DrawCircle(pos.x, pos.y, sqrtf(pos.x * pos.x + pos.y * pos.y), GetColor(255, 0, 0), TRUE);
 
 
 	//マウス位置を表示

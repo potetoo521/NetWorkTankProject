@@ -2,25 +2,10 @@
 #include "DxLib.h"
 #include <list>
 #include <memory>
-#include <string.h>
-#include <string>
-#include <sstream>
+
+#include "main.h"
+
 using namespace std;
-
-//移動ベクトル
-struct Vec {
-	float x, y;
-};
-
-//位置情報
-struct Pos {
-	float x, y;
-};
-
-//mouse位置を取得
-struct MousePos {
-	float x,y;
-};
 
 //ベースクラス
 class Base {
@@ -40,14 +25,16 @@ private:
 	int img{ 0 };//画像
 
 public:
-	char name[8]{ "null" }; //名前
-	Pos pos{ 0.0f,0.0f };   //位置
-	Vec vec{ 0.0f,0.0f };   //移動ベクトル
-	MousePos moupos{0, 0};  //mouseの位置
-	int ID{ -1 };           //オブジェクト識別用
-	IPDATA ip{ 0,0,0,0 };   //IPアドレス保存用
+	char name[8]{ "null" };  //名前
+	Pos pos{ 0.0f,0.0f };    //位置
+	Vec vec{ 0.0f,0.0f };    //移動ベクトル
+	Pos moupos{0, 0};        //mouseの位置
+	Vec mouvec{ 0,0 };       //mouseベクトル
+	GraphSize gr_size{ 0,0 };//画像サイズ
+	int ID{ -1 };            //オブジェクト識別用
+	IPDATA ip{ 0,0,0,0 };    //IPアドレス保存用
 
-	bool mouset_f = false;  //mouse座標取得判定
+	bool mouset_f = false;   //mouse座標取得判定
 
 	//コンストラクタ
 	Player();
@@ -59,6 +46,16 @@ public:
 
 };
 
+//送受信データ用のクラス
+class SendData{
+private:
+public:
+
+	Player player[MAX];
+	//Bullet bullet[MAXBULLET];
+};
+
+
 //弾丸
 class Bullet :public Base
 {
@@ -68,8 +65,11 @@ private:
 public:
 	Pos pos{ 0.0f,0.0f };//位置
 	Vec vec{ 0.0f,0.0f };//移動ベクトル
+	GraphSize gr_size{ 0,0 };//画像サイズ
+	int owner_Id = -1;//作成元のオブジェクトID格納用
+	int boundNum = 0; //弾丸の跳ね返り回数
 	//コンストラクタ
-	Bullet(float _x,float _y,float _vx,float _vy);
+	Bullet(float _x, float _y, float _vx, float _vy, int id);
 
 	int Action(list<unique_ptr<Base>>& base);
 	void Draw();

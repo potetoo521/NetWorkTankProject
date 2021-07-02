@@ -2,7 +2,7 @@
 #include "character.h"
 
 //コンストラクタ
-Bullet::Bullet(float _x, float _y,float _vx,float _vy) {
+Bullet::Bullet(float _x, float _y,float _vx,float _vy,int _id) {
 	img = LoadGraph("image/hitokage.png");
 
 	ID = 3;
@@ -20,12 +20,7 @@ int Bullet::Action(list<unique_ptr<Base>>& base) {
 	pos.x += vec.x;
 	pos.y += vec.y;
 
-	////画面の端に来たら、移動ベクトルを逆にする
-	//if (pos.x < 0 || pos.x>736.0f)vec.x = -vec.x;
-	//if (pos.y < 0 || pos.y>546.0f)vec.y = -vec.y;
 
-	//if (pos.x < 0 || pos.x>736.0f)ID=-999;
-	//if (pos.y < 0 || pos.y>546.0f)ID=-999;
 	return 0;
 }
 

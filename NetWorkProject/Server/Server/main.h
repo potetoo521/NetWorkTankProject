@@ -38,6 +38,7 @@ struct MousePos {
 	float x, y;
 };
 
+struct GraphSize { int x; int y; };   //画像サイズ
 
 //ベースクラス
 class Base {
@@ -55,13 +56,16 @@ public:
 class Player :public Base{
 private:
 	int img{0};
+
 public:
-	char name[8]{ "null" };//名前
-	Pos pos{ 0.0f,0.0f };//位置
-	Vec vec{ 0.0f,0.0f };//移動ベクトル
-	MousePos moupos{ 0, 0 };  //mouseの位置
-	int ID{ -1 };//オブジェクト識別用
-	IPDATA ip{ 0,0,0,0 };//IPアドレス保存用
+	char name[8]{ "null" };  //名前
+	Pos pos{ 0.0f,0.0f };    //位置 
+	Vec vec{ 0.0f,0.0f };    //移動ベクトル
+	Pos moupos{ 0, 0 };        //mouseの位置
+	Vec mouvec{ 0,0 };       //mouseベクトル
+	GraphSize gr_size{ 0,0 };//画像サイズ
+	int ID{ -1 };            //オブジェクト識別用
+	IPDATA ip{ 0,0,0,0 };    //IPアドレス保存用
 
 	bool mouset_f = false;//mouse座標取得判定
 
@@ -74,11 +78,6 @@ public:
 	
 	//初期化用メソッド
 	void Data_Init();
-
-	//処理
-	//int Player::Action(list<Base*>* base) {
-	//void Draw();
-	
 };
 
 
@@ -104,8 +103,8 @@ public:
 class SendData {
 private:
 public:
-	Player data[MAX];
-	BulletData bullet_data[MAXBULLET];
+	Player player[MAX];
+	//BulletData bullet_data[MAXBULLET];
 };
 
 

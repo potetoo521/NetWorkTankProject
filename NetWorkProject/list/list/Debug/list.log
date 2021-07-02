@@ -1,8 +1,5 @@
 ﻿  player.cpp
-C:\Users\GA3\Desktop\list\list\player.cpp(94,21): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\GA3\Desktop\list\list\player.cpp(94,14): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\GA3\Desktop\list\list\player.cpp(98,32): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\GA3\Desktop\list\list\player.cpp(98,23): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\GA3\Desktop\list\list\player.cpp(98,16): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\GA3\Desktop\list\list\player.cpp(102,27): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-  list.vcxproj -> C:\Users\GA3\Desktop\list\Debug\list.exe
+C:\Users\GA3\Desktop\NetWorkTankProject\NetWorkProject\list\list\player.cpp(87,21): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\GA3\Desktop\NetWorkTankProject\NetWorkProject\list\list\player.cpp(87,14): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\GA3\Desktop\NetWorkTankProject\NetWorkProject\list\list\player.cpp(95,27): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+  list.vcxproj -> C:\Users\GA3\Desktop\NetWorkTankProject\NetWorkProject\list\Debug\list.exe

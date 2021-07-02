@@ -41,7 +41,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 
 	for (int i = 0; i < MAX; i++) p_data[i] = new Player();
 
-	//送信用データ
+	//送受信用データ
 	SendData* Send_Data = new SendData();
 
 	//ネットワーク関係
@@ -174,13 +174,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 */
 
 	struct DataBox { //送受信用構造体(テスト)
-		Pos pos;
-		Vec vec;
-		MousePos mou_p;
-		bool bullet_f;
-		list<unique_ptr<Base>> RecData;//弾丸情報を格納用
-	};
+		Pos pos{ 0.0f,0.0f };    //位置
+		Vec vec{ 0.0f,0.0f };    //移動ベクトル
+		Pos moupos{ 0, 0 };        //mouseの位置
+		Vec mouvec{ 0,0 };       //mouseベクトル
+		GraphSize gr_size{ 0,0 };//画像サイズ
 
+	};
 
 		//p_data[0]==PlayerData
 	thread* p1 = new thread([&]()
@@ -214,66 +214,27 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 						) {
 
 						//二回目以降の接続
-						DataBox databox{0};//使用するデータを格納用
 
 						//受信データを変換
-						memcpy_s(&databox, sizeof(DataBox), StrBuf, sizeof(DataBox));
+						memcpy_s(&Send_Data, sizeof(SendData), StrBuf, sizeof(SendData));//送られてきたデータがSend_Dataにコピーされる
 
 						//移動処理
-						p_data[0]->pos.x += databox.vec.x;
-						p_data[0]->pos.y += databox.vec.y;
-		  
+						p_data[0]->pos.x += Send_Data->player[0].vec.x;
+						p_data[0]->pos.y += Send_Data->player[0].vec.y;
+		
+						p_data[0]->mouvec = Send_Data->player[0].mouvec;//マウスの正規化方向ベクトル格納
 
-						if (databox.bullet_f==true)
-						{
-							p_data[0]->moupos.x = databox.mou_p.x;
-							p_data[0]->moupos.y = databox.mou_p.y;
-						}
-						/*
-						//マウス左クリックされているか
-						if (mou_l==true)
-						{
-							p_data[0]->moupos.x = mop.x;
-							p_data[0]->moupos.y = mop.y;
-
-
-						}
-
-
-						//弾丸発射処理---
-						if (mou_l) {//mouse左クリックされたとき真
-
-							//Playerの位置を取得
-							float p_x = p_data[0]->pos.x;
-							float p_y = p_data[0]->pos.y;
-
-
-							//弾丸スポーン処理
-							auto a = (unique_ptr<Base>)new BulletData();
-							datalist.push_back(move(a));
-
-						}
-						//当たり判定
-						for (auto i = datalist.begin(); i != datalist.end(); i++) {
-							if ((*i)->ID == 1) {
-								Pos e_pos = ((BulletData*)(*i).get())->pos;
-								if (1) {
-
-									;
-								}
-							}
-						}*/
 
 						//HPの残存処理
 
 						//送信データの更新
-						Send_Data->data[0].pos.x = p_data[0]->pos.x;
-						Send_Data->data[0].pos.y = p_data[0]->pos.y;
-						//送信データの更新
-						Send_Data->data[0].moupos.x = p_data[0]->moupos.x;
-						Send_Data->data[0].moupos.y = p_data[0]->moupos.y;
+						Send_Data->player[0].pos.x = p_data[0]->pos.x;
+						Send_Data->player[0].pos.y = p_data[0]->pos.y;
+						
+						Send_Data->player[0].moupos.x = p_data[0]->moupos.x;
+						Send_Data->player[0].moupos.y = p_data[0]->moupos.y;
 
-
+						Send_Data->player[0].mouvec = p_data[0]->mouvec;
 
 					}
 					else {
@@ -281,16 +242,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 						//IPと名前を登録
 						p_data[0]->ip = ip;
 						p_data[0]->ID = 0;
+
 						memcpy_s(p_data[0]->name, sizeof(p_data[0]->name),
 							StrBuf, sizeof(p_data[0]->name));
 						//送信データの更新
-						strcpy_s(Send_Data->data[0].name, sizeof(p_data[0]->name), p_data[0]->name);
+						strcpy_s(Send_Data->player[0].name, sizeof(p_data[0]->name), p_data[0]->name);
 
-						Send_Data->data[0].pos = p_data[0]->pos;//位置
+						Send_Data->player[0].pos = p_data[0]->pos;//位置
 
-						Send_Data->data[0].ip = p_data[0]->ip;//IP
+						Send_Data->player[0].ip = p_data[0]->ip;//IP
 
-						Send_Data->data[0].ID = p_data[0]->ID;//ID
+						Send_Data->player[0].ID = p_data[0]->ID;//ID
 
 						//データを送信
 						NetWorkSend(p1_NetHandle, Send_Data, sizeof(SendData));
@@ -330,31 +292,51 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 					if (p_data[1]->ip.d1 == ip.d1 && p_data[1]->ip.d2 == ip.d2 &&
 						p_data[1]->ip.d3 == ip.d3 && p_data[1]->ip.d4 == ip.d4
 						) {
+
 						//二回目以降の接続
-						Vec v{ 0.0f,0.0f };
+
 						//受信データを変換
-						memcpy_s(&v, sizeof(Vec), StrBuf, sizeof(Vec));
+						memcpy_s(&Send_Data, sizeof(SendData), StrBuf, sizeof(SendData));//送られてきたデータがSend_Dataにコピーされる
+
 						//移動処理
-						p_data[1]->pos.x += v.x;
-						p_data[1]->pos.y += v.y;
+						p_data[1]->pos.x += Send_Data->player[1].vec.x;
+						p_data[1]->pos.y += Send_Data->player[1].vec.y;
+
+
+						p_data[1]->mouvec = Send_Data->player[1].mouvec;//マウスの正規化方向ベクトル格納
+
+
+
+						//HPの残存処理
 
 						//送信データの更新
-						Send_Data->data[1].pos.x = p_data[1]->pos.x;
-						Send_Data->data[1].pos.y = p_data[1]->pos.y;
+						Send_Data->player[1].pos.x = p_data[1]->pos.x;
+						Send_Data->player[1].pos.y = p_data[1]->pos.y;
+						//送信データの更新
+						Send_Data->player[1].moupos.x = p_data[1]->moupos.x;
+						Send_Data->player[1].moupos.y = p_data[1]->moupos.y;
 
+						Send_Data->player[1].mouvec = p_data[1]->mouvec;
+
+						//データを送信
+						NetWorkSend(p2_NetHandle, Send_Data, sizeof(SendData));
 					}
 					else {
 						//初回の接続
 						//IPと名前を登録
 						p_data[1]->ip = ip;
-						p_data[1]->ID = 1;
+						p_data[1]->ID = 0;
+
 						memcpy_s(p_data[1]->name, sizeof(p_data[1]->name),
 							StrBuf, sizeof(p_data[1]->name));
 						//送信データの更新
-						strcpy_s(Send_Data->data[1].name, sizeof(p_data[1]->name), p_data[1]->name);
-						Send_Data->data[1].pos = p_data[1]->pos;//位置
-						Send_Data->data[1].ip = p_data[1]->ip;//IP
-						Send_Data->data[1].ID = p_data[1]->ID;
+						strcpy_s(Send_Data->player[1].name, sizeof(p_data[1]->name), p_data[1]->name);
+
+						Send_Data->player[1].pos = p_data[1]->pos;//位置
+
+						Send_Data->player[1].ip = p_data[1]->ip;//IP
+
+						Send_Data->player[1].ID = p_data[1]->ID;//ID
 
 						//データを送信
 						NetWorkSend(p2_NetHandle, Send_Data, sizeof(SendData));
@@ -383,7 +365,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 
 			//データを送信
 			if (NetHandle[i] != -1) {
-				NetWorkSend(NetHandle[i], Send_Data, sizeof(SendData));
+				NetWorkSend(NetHandle[i], Send_Data, sizeof(SendData));//各プレイヤーにまとめてデータを送信
 			}
 
 			//切断したプレイヤーを初期化

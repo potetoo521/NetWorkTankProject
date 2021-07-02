@@ -84,32 +84,3 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	return 0;
 }
 
-//当たり判定
-bool CheckHit(float m_x, float m_y, float e_x, float e_y, float p_pixel, float e_pixel) {
-
-	float magLen = (p_pixel + e_pixel)/2;
-
-	float len = sqrtf((e_x - m_x) * (e_x - m_x) + (e_y - m_y) * (e_y - m_y));//内積の長さを取得
-	
-	if (len <= magLen)//MagLen == lenまでの距離
-	{
-		return true;//判定結果当たっている( 真 )を返す
-	}
-	else
-	{
-		return false;//判定結果当たっていない( 偽 )を返す
-	}
-};
-
-//画面の端に来たら画面外に出ない用に位置を修正する
-void ScreenHitCheck(float *x,float *y,int gr_x,int gr_y) {
-
-	//x軸
-	if (*x + gr_x > WIDTH)  *x  = WIDTH  - gr_x;
-
-	if (*x < 0) *x = 0;
-	//y軸
-	if (*y + gr_y > HEIGHT) *y  = HEIGHT - gr_y;
-
-	if (*y < 0) *y = 0;
-}
