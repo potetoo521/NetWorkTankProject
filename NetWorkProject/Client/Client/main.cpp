@@ -71,13 +71,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	//全てのプレイヤーデータ(自身を含む)
 	SendData* Player_ALL = new SendData();
 
-	auto addAll = (unique_ptr<Base>) Player_ALL->player;//全てのプレイヤーデータをリストに追加
-	datalist.emplace_back(move(addAll));//リストに追加
-
+	//Player* PlayerChar[MAX];//プレイヤーデータ編集用
+	//for (int i = 0; i < MAX; i++)//テスト
+	//{
+	//	PlayerChar[i] = new Player();//プレイヤーデータ作成
+	//	auto addAll = (unique_ptr<Base>) PlayerChar[i];//全てのプレイヤーデータをリストに追加
+	//	datalist.emplace_back(move(addAll));//リストに追加
+	//}
+	//
+	//
 	
 	//初回接続(サーバーへ接続）
 	NetHandel = ConnectNetWork(IP, Port);//入力したIPと設定したポートを使用
-
 
 	//接続するまで待機
 	while (CheckHitKey(KEY_INPUT_ESCAPE) == 0) {
@@ -125,7 +130,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	while (CheckHitKey(KEY_INPUT_ESCAPE) == 0) {
 		ClearDrawScreen();//画面クリア
 
-		bool net_Receive = false;//受信データがあるか(Debug用)
 
 		//受信データがあるかチェック
 		if (GetNetWorkDataLength(NetHandel) != 0) {
@@ -134,37 +138,30 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 			//プレイヤー全体データの更新
 			memcpy_s(Player_ALL, sizeof(SendData), StrBuf, sizeof(SendData));//データを受け取る
 
-
-			net_Receive = true;
 		}
 		else
 		{
+
 			//データを受信していない場合
-		
-		    databox->player->vec    = my_Data->vec;  //移動 Vec情報 8
+		    Player_ALL->player->vec    = my_Data->vec;  //移動 Vec情報 8
 
 			//弾丸の作成した情報を送るときはベクトルと位置情報、IDがあれば別クライアント側で作成できる
-			databox->player->mouvec = my_Data->mouvec; //mousevec Vec情報 8
+			Player_ALL->player->mouvec = my_Data->mouvec; //mousevec Vec情報 8
 
 			my_Data->mouvec = { 0.0f,0.0f };//ベクトルを初期化
 
 			//データ送信
-			NetWorkSend(NetHandel, &databox, sizeof(SendData)); //CharacterData送信
+			NetWorkSend(NetHandel, &Player_ALL, sizeof(SendData)); //CharacterData送信
 	
 		}
 
 		DrawFormatString(0, 256, GetColor(255, 255, 255),
-			"mouse_x:%d          mouse_y:%d"    "pos_x:%d          pos_y:%d",
+			"mouse_x:%f         mouse_y:%f"    "pos_x:%f          pos_y:%f",
 			my_Data->moupos.x,
 			my_Data->moupos.y,
 			my_Data->pos.x,
 			my_Data->pos.y
 		);
-
-		//Player実行
-		//my_Data->Action(datalist);//Action実行
-		//my_Data->Draw();//描画実行
-		
 
 
 		//リストのメソッドを実行
@@ -177,9 +174,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 			if (IsVariable(data->mouvec))//ベクトルが存在するか
 			{
 				//受信データを元に各プレイヤーのベクトルと位置を参照し弾丸作成(Test)
-				//Bullet* bullet = new Bullet(data->pos.x, data->pos.y, data->mouvec.x, data->mouvec.y, data->ID);//位置と方向ベクトル
-				//auto add = (unique_ptr<Bullet>) bullet;
-				//datalist.emplace_back(move(add));//リストにbulletを追加
+				Bullet* bullet = new Bullet(data->pos.x, data->pos.y, data->mouvec.x, data->mouvec.y, data->ID);//位置と方向ベクトル
+				auto add = (unique_ptr<Bullet>) bullet;
+				datalist.emplace_back(move(add));//リストにbulletを追加
 			}
 				
 		}

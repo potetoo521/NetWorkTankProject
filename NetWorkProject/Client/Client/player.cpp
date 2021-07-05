@@ -54,9 +54,9 @@ int Player::Action(list<unique_ptr<Base>>& base)
 	}
 
 	DrawFormatString(0, 64, GetColor(255, 255, 255),
-		"mouse_x:%f          mouse_y:%f"    "pos_x:%d          pos_y:%d",
-		moupos.x,
-		moupos.y,
+		"mouvec_x:%f          mouvec_y:%f"    "pos_x:%d          pos_y:%d",
+		mouvec.x,
+		mouvec.y,
 		pos.x,
 		pos.y
 	);
