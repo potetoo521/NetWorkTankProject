@@ -36,7 +36,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	for (int i = 0; i < MAX; i++)
 	{
 		img[0] = LoadGraph("image/maid.png");
-		img[1] = LoadGraph("image/koiking.png");
+		img[1] = LoadGraph("image/Bullet.jpg");
 	}
 	
 	//送受信データ処理用
@@ -66,7 +66,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 	datalist.emplace_back(move(add));//リストに追加
 
 	//データ送信用データ
-	SendData* databox = new SendData();
+	Player* databox = new Player();
 
 	//全てのプレイヤーデータ(自身を含む)
 	SendData* Player_ALL = new SendData();
@@ -143,15 +143,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 		{
 
 			//データを受信していない場合
-		    Player_ALL->player->vec    = my_Data->vec;  //移動 Vec情報 8
+		    databox->vec    = my_Data->vec;  //移動 Vec情報 8
 
 			//弾丸の作成した情報を送るときはベクトルと位置情報、IDがあれば別クライアント側で作成できる
-			Player_ALL->player->mouvec = my_Data->mouvec; //mousevec Vec情報 8
+			databox->mouvec = my_Data->mouvec; //mousevec Vec情報 8
 
 			my_Data->mouvec = { 0.0f,0.0f };//ベクトルを初期化
 
 			//データ送信
-			NetWorkSend(NetHandel, &Player_ALL, sizeof(SendData)); //CharacterData送信
+			NetWorkSend(NetHandel, &databox, sizeof(SendData)); //CharacterData送信
 	
 		}
 
@@ -169,7 +169,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 
 			(*i)->Action(datalist);//全てのオブジェクトのAction処理
 	
-			Player* data = ((Player*)(&i));//プレイヤーデータ
+			Player* data = ((Player*)(*i).get());//プレイヤーデータ
 
 			if (IsVariable(data->mouvec))//ベクトルが存在するか
 			{

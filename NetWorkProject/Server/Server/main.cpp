@@ -214,15 +214,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 						) {
 
 						//二回目以降の接続
+						DataBox databox;
 
 						//受信データを変換
-						memcpy_s(&Send_Data, sizeof(SendData), StrBuf, sizeof(SendData));//送られてきたデータがSend_Dataにコピーされる
+						memcpy_s(&databox, sizeof(DataBox), StrBuf, sizeof(DataBox));//送られてきたデータがSend_Dataにコピーされる
 
 						//移動処理
-						p_data[0]->pos.x += Send_Data->player[0].vec.x;
-						p_data[0]->pos.y += Send_Data->player[0].vec.y;
+						p_data[0]->pos.x += databox.vec.x;
+						p_data[0]->pos.y += databox.vec.y;
 		
-						p_data[0]->mouvec = Send_Data->player[0].mouvec;//マウスの正規化方向ベクトル格納
+						p_data[0]->mouvec = databox.mouvec;//マウスの正規化方向ベクトル格納
 
 
 						//HPの残存処理
@@ -294,16 +295,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE,
 						) {
 
 						//二回目以降の接続
+						DataBox databox;
 
 						//受信データを変換
-						memcpy_s(&Send_Data, sizeof(SendData), StrBuf, sizeof(SendData));//送られてきたデータがSend_Dataにコピーされる
+						memcpy_s(&databox, sizeof(DataBox), StrBuf, sizeof(DataBox));//送られてきたデータがSend_Dataにコピーされる
 
 						//移動処理
-						p_data[1]->pos.x += Send_Data->player[1].vec.x;
-						p_data[1]->pos.y += Send_Data->player[1].vec.y;
+						p_data[1]->pos.x += databox.vec.x;
+						p_data[1]->pos.y += databox.vec.y;
 
 
-						p_data[1]->mouvec = Send_Data->player[1].mouvec;//マウスの正規化方向ベクトル格納
+						p_data[1]->mouvec = databox.mouvec;//マウスの正規化方向ベクトル格納
 
 
 
