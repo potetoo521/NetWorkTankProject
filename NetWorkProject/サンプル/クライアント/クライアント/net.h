@@ -12,7 +12,8 @@ enum {
 //プレイヤーのデータ
 typedef struct Player_Data {
 	Player p_data[MAX];
-	Vec tama_vec[MAX]{ {0.0f,0.0f}, {0.0f,0.0f}, {0.0f,0.0f}, {0.0f,0.0f} };//弾の移動ベクトル
+	Bullet b_data[MAX];
+	
 	IPDATA IP[MAX] = { {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0} };
 	int NetHandle[MAX] = { -1, -1, -1, -1 };//ネットハンドル
 	int flg[MAX] = { -1,-1,-1,-1 };//存在の有無(1以上存在)

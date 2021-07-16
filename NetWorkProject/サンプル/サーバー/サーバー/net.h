@@ -12,7 +12,8 @@ enum {
 //プレイヤーのデータ
 typedef struct Player_Data {
 	Player p_data[MAX];
-	Vec tama_vec[MAX]{ {0.0f,0.0f}, {0.0f,0.0f}, {0.0f,0.0f}, {0.0f,0.0f} };//弾の移動ベクトル
+	Bullet b_data[MAX];
+
 	IPDATA IP[MAX] = { {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0} };
 	int NetHandle[MAX] = { -1, -1, -1, -1 };//ネットハンドル
 	int flg[MAX] = { -1,-1,-1,-1 };//存在の有無(1以上存在)
@@ -32,6 +33,6 @@ public:
 class  SEND_CLIENT_DATA{
 private:
 public:
-	Point pos[MAX];//プレイヤーの位置
+	Point pos[MAX];//弾丸の位置
 	Vec m_vec{ 0.0f,0.0f };//弾の移動ベクトル
 };

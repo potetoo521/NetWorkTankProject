@@ -16,7 +16,7 @@ public:
 	//コンストラクタ
 	Mouse();
 
-	int Action(list<unique_ptr<Bace>>& bace,float px,float py);//ボタンの状態を返す。(プレイヤーのx座標,プレイヤーのy座標)
+	int Action(list<unique_ptr<Bace>>& bace,float px,float py,char id);//ボタンの状態を返す。(プレイヤーのx座標,プレイヤーのy座標)
 
 	void Draw();
 };

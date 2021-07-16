@@ -80,14 +80,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR 
 				//弾丸との当たり判定実装
 				
 
-
-
-
 				//弾の処理
 				//弾の移動ベクトルがゼロじゃ無い場合
 				if (c_send.m_vec.x != 0.0f || c_send.m_vec.y != 0.0f) {
 					//送信する弾の移動ベクトルの情報を更新
-					p.tama_vec[T1] = c_send.m_vec;
+					p.b_data[T1].bullet_vec = c_send.m_vec;
 				}
 			}
 			if (ProcessMessage() == -1) break;
@@ -136,7 +133,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR 
 				//弾の移動ベクトルがゼロじゃ無い場合
 				if (c_send.m_vec.x != 0.0f || c_send.m_vec.y != 0.0f) {
 					//送信する弾の移動ベクトルの情報を更新
-					p.tama_vec[T2] = c_send.m_vec;
+					p.b_data[T2].bullet_vec = c_send.m_vec;
 				}
 			}
 			if (ProcessMessage() == -1) break;
@@ -187,6 +184,38 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR 
 			}
 		}
 
+		Player_Data cp = p;//送信プレイヤーデータをコピー
+		
+		////全てのプレイヤーとの当たり判定
+		//for ( int i = 0; i < MAX; i++)
+		//{
+		//	for (int j = 0; j < MAX; j++)
+		//	{
+		//		if (cp.p_data[i].ID != p.p_data[j].ID) {//同じID同士なら判定しない
+		//			 
+		//			if (CheckHit(cp.p_data[i].pos.x, cp.p_data[i].pos.y,
+		//				p.p_data[j].pos.x, p.p_data[j].pos.y, 64.0f, 64.0f))//判定
+		//			{
+		//				p.p_data[i].hit_flag = true; //Hitフラグを格納
+		//				p.p_data[j].hit_flag = true; //Hitフラグを格納
+		//			}
+		//		}
+
+		//		//if (cp.b_data[i].ID != p.b_data[j].ID) {//プレイヤーと弾丸の判定 同じID同士なら判定しない
+		//		//
+		//		//	if (CheckHit(cp.b_data[i].bullet_pos.x, cp.b_data[i].bullet_pos.y,
+		//		//		p.p_data[j].pos.x, p.p_data[j].pos.y, 64.0f, 64.0f))//弾丸の当たり判定
+		//		//	{
+		//		//		p.b_data[j].hit_flag = true;//弾丸 //Hitフラグを格納
+		//		//		p.p_data[j].hit_flag = true;//プレイヤー //Hitフラグを格納
+		//		//	}
+		//		//}
+		//	}
+		//}
+
+
+//---------------------------------------------------------------------------------
+
 		//データの送信
 		for (int i = 0; i < MAX; i++) {
 			if (p.NetHandle[i] != -1) {
@@ -196,7 +225,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR 
 
 		//弾の移動ベクトルを初期化
 		for (int i = 0; i < MAX; i++) {
-			p.tama_vec[i] = { 0.0f,0.0f };
+			p.b_data[i].bullet_vec = { 0.0f,0.0f };
 		}
 
 		ScreenFlip();

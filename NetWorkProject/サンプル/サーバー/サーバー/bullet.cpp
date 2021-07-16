@@ -32,3 +32,8 @@ int Bullet::Action(list<unique_ptr<Bace>>& bace) {
 void Bullet::Draw() {
 	DrawGraphF(pos.x, pos.y, img, TRUE);
 }
+
+Bullet::Bullet()
+{
+
+}

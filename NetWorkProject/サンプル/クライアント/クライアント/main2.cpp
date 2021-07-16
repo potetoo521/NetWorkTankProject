@@ -32,12 +32,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR 
 	IPDATA IP;//IPアドレス
 	int NetHandle;//ネットワークハンドル
 	int port = 26;//ポート
+
 	//IPアドレスセット
 	//IP = IP_set();
 	IP.d1 = 172;
 	IP.d2 = 17;
 	IP.d3 = 80;
 	IP.d4 = 103;
+
 	//サーバーで管理しているID(スレッドNo）
 	int server_ID{ -1 };
 
@@ -86,8 +88,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR 
 
 	NetWorkRecvBufferClear(NetHandle);//受信データバッファをクリア
 
+	
+
 	//メインループ
-	while (scene==ONLINE){
+	while (scene == ONLINE) {
 		if (CheckHitKey(KEY_INPUT_ESCAPE)) scene = -1;
 
 		ClearDrawScreen();
@@ -115,16 +119,22 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR 
 
 					//他のプレイヤーの座標を更新
 					if (p.flg[i] != -1) {
-						for (auto a = bace.begin(); a != bace.end(); a++) {
+						for (auto a = bace.begin(); a != bace.end(); a++) {//リスト
 							if ((*a)->ID == p.flg[i]) {
+
 								//同じIDの座標を更新
 								((AnyPlayer*)(*a).get())->pos = r_recv.p_data[i].pos;
+								//((AnyPlayer*)(*a).get())->FLAG = r_recv.p_data[i].hit_flag;//ヒットフラグ更新
+								
+								//((Player*)(*a).get())->FLAG = r_recv.p_data[i].hit_flag;
+
 								//攻撃処理
 								//もし、攻撃ベクトルが0.0f以外だったら弾を生成してその方向に飛ばす
-								if (r_recv.tama_vec[i].x != 0.0f || r_recv.tama_vec[i].y != 0.0f) {
+								if (r_recv.b_data[i].bullet_vec.x != 0.0f || r_recv.b_data[i].bullet_vec.y != 0.0f) {
+
 									//弾をlistに追加
-									bace.emplace_back((unique_ptr<Bace>)new Bullet(r_recv.tama_vec[i].x, r_recv.tama_vec[i].y,
-																												r_recv.p_data[i].pos.x, r_recv.p_data[i].pos.y));
+									bace.emplace_back((unique_ptr<Bace>)new Bullet(r_recv.b_data[i].bullet_vec.x, r_recv.b_data[i].bullet_vec.y,
+										r_recv.p_data[i].pos.x, r_recv.p_data[i].pos.y, r_recv.p_data[i].ID));
 								}
 							}
 						}
@@ -136,7 +146,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR 
 		}
 
 		//プレイヤーとマウス(攻撃）に動きがあったらデータを送信
-		if (mouse->Action(bace,player->pos.x,player->pos.y) || player->Action(bace)) {
+		if (mouse->Action(bace, player->pos.x, player->pos.y,player->ID) || player->Action(bace)) {
 			//送信データの作成
 			SEND_CLIENT_DATA send;
 			send.pos[server_ID] = player->pos;//位置情報
@@ -144,10 +154,26 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR 
 			NetWorkSend(NetHandle, &send, sizeof(send));//データ送信
 		}
 
+		//-----------------------------
+		//for (auto i = bace.begin(); i != bace.end(); i++){ 
+		// 
+		//	if (((Bullet*)(*i).get())->ID == p.p_data->ID);
+		// 
+		// NetWorkSend(NetHandle,&send,sizeof(send));//データ送信
+        //      	}
+		//ヒット判定があった弾丸のIDと発射プレイヤーID
+
+		
+		
+
+
+		//-----------------------------
+		
+
 		//リストのAction処理
 		for (auto i = bace.begin(); i != bace.end(); i++) (*i)->Action(bace);
 
-		//リストから不要オブジェクトを削除（弾）
+		//リストから不要オブジェクトを削除
 		for (auto i = bace.begin(); i != bace.end(); i++) {
 			if ((*i)->FLAG == false) {
 				i = bace.erase(i);

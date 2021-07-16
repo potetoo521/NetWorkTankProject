@@ -9,7 +9,7 @@ Mouse::Mouse() {
 
 //処理
 //ボタンの状態を返す。(プレイヤーのx座標,プレイヤーのy座標)
-int Mouse::Action(list<unique_ptr<Bace>>& bace, float px, float py) {
+int Mouse::Action(list<unique_ptr<Bace>>& bace, float px, float py,char id) {
 	int mx, my;
 	GetMousePoint(&mx, &my);//マウスの位置情報取得
 
@@ -36,7 +36,7 @@ int Mouse::Action(list<unique_ptr<Bace>>& bace, float px, float py) {
 		v.x = (v.x / d) * 4.0f;
 		v.y = (v.y / d) * 4.0f;
 		//弾を生成
-		bace.emplace_back((unique_ptr<Bace>)new Bullet(v.x, v.y, px, py));
+		bace.emplace_back((unique_ptr<Bace>)new Bullet(v.x, v.y, px, py,id));
 		//弾の移動ベクトル
 		b_v.x = v.x;
 		b_v.y = v.y;

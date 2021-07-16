@@ -7,6 +7,7 @@ private:
 public:
 	char name[8] = { "null" };//名前
 	Point pos{ 0.0f,0.0f };//位置
+	bool hit_flag = false;//ヒット判定フラグ
 	
 	//コンストラクタ
 	Player(float _x,float _y);//クライアント用
@@ -23,9 +24,14 @@ public:
 class Bullet :public Bace {
 private:
 public:
+
+	Vec bullet_vec{0.0f,0.0f};//弾の移動ベクトル
+	Pos bullet_pos{0.0f,0.0f};//弾の位置
+	bool hit_flag = false;    //弾丸のヒット判定フラグ
+
 	//コンストラクタ
 	Bullet(float vx, float vy, float px, float py);
-
+	Bullet();
 	int Action(list<unique_ptr<Bace>>& bace);
 	void Draw();
 };
