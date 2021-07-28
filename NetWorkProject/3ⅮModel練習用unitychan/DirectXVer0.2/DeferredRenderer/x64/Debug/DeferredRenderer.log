@@ -1,0 +1,8 @@
+﻿  main.cpp
+C:\Users\GA3\Desktop\3ⅮModel練習用unitychan\DirectXVer0.2\DeferredRenderer\Source\main.cpp(47,11): warning C4101: 'Time': ローカル変数は 1 度も使われていません。
+C:\Users\GA3\Desktop\3ⅮModel練習用unitychan\DirectXVer0.2\DeferredRenderer\Source\main.cpp(51,11): warning C4101: 'FPSCheckTime': ローカル変数は 1 度も使われていません。
+C:\Users\GA3\Desktop\3ⅮModel練習用unitychan\DirectXVer0.2\DeferredRenderer\Source\main.cpp(50,6): warning C4101: 'FPSCounter': ローカル変数は 1 度も使われていません。
+C:\Users\GA3\Desktop\3ⅮModel練習用unitychan\DirectXVer0.2\DeferredRenderer\Source\main.cpp(48,8): warning C4101: 'DeltaTime': ローカル変数は 1 度も使われていません。
+C:\Users\GA3\Desktop\3ⅮModel練習用unitychan\DirectXVer0.2\DeferredRenderer\Source\main.cpp(46,11): warning C4101: 'NowTime': ローカル変数は 1 度も使われていません。
+C:\Users\GA3\Desktop\3ⅮModel練習用unitychan\DirectXVer0.2\DeferredRenderer\Source\main.cpp(49,6): warning C4101: 'FPS': ローカル変数は 1 度も使われていません。
+  DeferredRenderer.vcxproj -> C:\Users\GA3\Desktop\3ⅮModel練習用unitychan\DirectXVer0.2\x64\Debug\DirectX11.exe

@@ -186,32 +186,40 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR 
 
 		Player_Data cp = p;//送信プレイヤーデータをコピー
 		
-		////全てのプレイヤーとの当たり判定
-		//for ( int i = 0; i < MAX; i++)
-		//{
-		//	for (int j = 0; j < MAX; j++)
-		//	{
-		//		if (cp.p_data[i].ID != p.p_data[j].ID) {//同じID同士なら判定しない
-		//			 
-		//			if (CheckHit(cp.p_data[i].pos.x, cp.p_data[i].pos.y,
-		//				p.p_data[j].pos.x, p.p_data[j].pos.y, 64.0f, 64.0f))//判定
-		//			{
-		//				p.p_data[i].hit_flag = true; //Hitフラグを格納
-		//				p.p_data[j].hit_flag = true; //Hitフラグを格納
-		//			}
-		//		}
+		//全てのプレイヤー情報が入っている p 
+		// 現在のプレイヤーの位置と他のプレイヤーの座標で当たり判定をとる
+		// 各プレイヤーが持つフラグに判定結果を渡す 
+		//全てのプレイヤーとの当たり判定
+		//プレイヤーが接続されているかチェックする必要がある？
+		for ( int i = 0; i < MAX; i++)
+		{
+			for (int j = 0; j < MAX; j++)
+			{
+				if (cp.flg[i] != -1 && cp.flg[j] != -1) {
 
-		//		//if (cp.b_data[i].ID != p.b_data[j].ID) {//プレイヤーと弾丸の判定 同じID同士なら判定しない
-		//		//
-		//		//	if (CheckHit(cp.b_data[i].bullet_pos.x, cp.b_data[i].bullet_pos.y,
-		//		//		p.p_data[j].pos.x, p.p_data[j].pos.y, 64.0f, 64.0f))//弾丸の当たり判定
-		//		//	{
-		//		//		p.b_data[j].hit_flag = true;//弾丸 //Hitフラグを格納
-		//		//		p.p_data[j].hit_flag = true;//プレイヤー //Hitフラグを格納
-		//		//	}
-		//		//}
-		//	}
-		//}
+
+					if (cp.p_data[i].ID != p.p_data[j].ID) {//同じID同士なら判定しない
+
+						if (CheckHit(cp.p_data[i].pos.x, cp.p_data[i].pos.y,
+							p.p_data[j].pos.x, p.p_data[j].pos.y, 64.0f, 64.0f))//判定
+						{
+							p.p_data[i].hit_flag = true; //Hitフラグを格納
+							p.p_data[j].hit_flag = true; //Hitフラグを格納
+						}
+					}
+
+					if (cp.b_data[i].ID =! p.b_data[j].ID) {//プレイヤーと弾丸の判定 同じID同士なら判定しない
+
+						if (CheckHit(cp.b_data[i].bullet_pos.x, cp.b_data[i].bullet_pos.y,
+							p.p_data[j].pos.x, p.p_data[j].pos.y, 64.0f, 64.0f))//弾丸の当たり判定
+						{
+							p.b_data[j].hit_flag = true;//弾丸 //Hitフラグを格納
+							p.p_data[j].hit_flag = true;//プレイヤー //Hitフラグを格納
+						}
+					}
+				}
+			}
+		}
 
 
 //---------------------------------------------------------------------------------

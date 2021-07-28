@@ -1,0 +1,157 @@
+DirectX11 モデルの表示
+(Shader を使っている)
+C++ class Visual Studio 2019 x64
+ファイル□FBX(AutoDesk) Model+Scene(Stage Camera Light)
+ModelExport->FBX Modelオンリ (ポリゴンだけ)
+
+原則 □ Unityが読み込めるモデルのみ
+
+
+１．大きな流れ
+
+　　Windows初期化 □ Windowsプログラム(Base)
+　　
+　　DirectX初期化
+　　
+　　モデルのロード
+　　
+　　フレーム描画
+　　
+　　Escapeキーまたは、終了ボタンを
+　　押すまで
+　　
+　　モデルの更新（移動）
+　　
+　　DirectX11描画開始
+　　（GPU,VRAMを使用）
+　　（ダブルバッファの裏バッファに描く）
+　　　
+　　　
+　　　背景の表示（3Dオブジェクト　平面（Plane)）
+　　　
+　　　モデルの描画(FBX)
+　　　
+　　　モデルの描画(FBX)
+　　　
+　　　フォントの表示(英数フォント)
+　　　
+　　　UIの表示
+　　　
+　　DirectX11　Swap
+　　裏バッファを表バッファにする
+　　　
+　　フレーム描画終了　
+
+2.プログラム
+
+  大きくInit（）、Update（）(Move,Jump,Anime,,,,) 、Draw（）関数 Release()解放
+  
+  //----------------------------------------------
+  // Init()
+  //----------------------------------------------
+　モデルの定義
+　　main()で、定義できますが
+　　モデルごとの、プログラムのグローバル領域に定義
+　　
+　静止モデル
+　
+　　UnityExportModel BlockModel;
+
+	BlockModel.LoadBinary("Assets/Block/MeshData.umb");
+	
+　スキンメッシュアニメーションモデル
+　　
+　　UnityExportSkinnedModel unitychan;
+　　//-----------------------------------------
+　　// アニメーション　モーション読み込み
+　　// model名　モーション名　Anime
+　　//-----------------------------------------
+　　uem::SkinnedAnimation unitychanRunAnime;
+　　
+　　//ロード
+　　unitychan.LoadBinary(
+		"Assets/Models/SkinnedMeshData.txt.bin");
+		//普通は、SkinnedMeshData.usb
+
+	//-----------------------------------------
+	// Running　アニメーションよみこみ
+	//-----------------------------------------
+	unitychanRunAnime.LoadBinary(
+		"Assets/Models/RUN00_Fanim.bin",
+		unitychan.uemData.root.get());
+		//モデルのファイル名普通は、mixamo.comanim.usab
+		
+	
+	//--------------------------------------------
+	// フォーメーションセット(姿勢制御）
+	//--------------------------------------------
+	アニメーションの時間の変数を定義
+	float animeTime = 0.0f;
+	float animeMaxTime = 0.0f;
+
+	//最初のポーズを設定
+	unitychanRunAnime.SetTransform(animeTime);
+	
+	//アニメーションの最大時間を取得
+	animeMaxTime = //0.8sec
+		unitychanRunAnime.GetMaxAnimationTime();
+	//--------------------------------------------
+	// Update()　Vectorとマトリックス
+	//--------------------------------------------
+	移動（Moveは、Update（）で行う）
+	
+	XMVECTOR Pos;//位置
+	XMVECTOR Speed;//速度ベクトル
+	XMVECTOR Dir;  //方向ベクトル Direction
+	FLOAT Yaw;//y軸周り回転角
+
+	回転は
+	ラジアン角を足す
+	一度は、0.01f
+        3.14 XM_PI = 180°
+	if(GetKeyboardPress(DIK_D){
+
+                //約一度
+		Yaw-=0.01f;//(float)XM_PI / 180
+	}
+
+    回転した、方向に移動
+    //(x,y,z,w) w..同次座標
+    Dir=XMVectorSet(0,0,1,1);//画面奥に向かう方向
+    
+    Pos+=Dir * 0.01f;
+    
+    //方向の設定
+    //ワールドMatrixの3行目
+    // r..rowの略
+    // r[0]..1行目 r[1]..2行目　r[2]..3行目
+    // r[0] ローカル座標系のx軸　r[1] y軸　r[2] z軸
+    Dir=PlayerWorldMatrix.r[2];//3行目
+
+　  //WorldMatrixの計算
+　  
+　  XMFLOAT3 vPos;
+	XMStoreFloat3(&vPos, Pos);//Pos->vPos
+	
+        //GPU
+	//ワールドMatrix = 回転Matrix ＊移動Matrix
+
+	WorldMatrix = XMMatrixRotationY(Yaw) *
+		XMMatrixTranslation(vPos.x, vPos.y, vPos.z);
+	
+	//描画
+	//転置行列 列行
+	consBufferMatrix.world = XMMatrixTranspose(
+		WorldMatrix);
+	
+
+	//GPUに定数バッファ（UnityちゃんのWorld Matrix  回転、移動情報)を転送
+	g_DX11Manager.UpdateConstantBuffer(
+		cbuffer.Get(), consBufferMatrix);
+	
+	//スキンメッシュアニメーション model 表示
+	
+	unitychan.Draw();
+	
+　  
+	

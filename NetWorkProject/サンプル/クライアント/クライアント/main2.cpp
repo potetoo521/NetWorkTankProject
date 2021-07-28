@@ -12,7 +12,6 @@ list<unique_ptr<Bace>> bace;
 //クライアント用プログラム(TCP/IP)
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR lpCmdLine, _In_ int nShowCmd)
 {
-	//windowモード切替
 	ChangeWindowMode(TRUE);
 	//windowサイズ
 	SetGraphMode(800, 600, 32);
@@ -93,7 +92,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR 
 	//メインループ
 	while (scene == ONLINE) {
 		if (CheckHitKey(KEY_INPUT_ESCAPE)) scene = -1;
-
+		
 		ClearDrawScreen();
 		int d_length = GetNetWorkDataLength(NetHandle);
 
@@ -162,8 +161,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR 
 		// NetWorkSend(NetHandle,&send,sizeof(send));//データ送信
         //      	}
 		//ヒット判定があった弾丸のIDと発射プレイヤーID
-
 		
+
 		
 
 
@@ -174,9 +173,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR 
 		for (auto i = bace.begin(); i != bace.end(); i++) (*i)->Action(bace);
 
 		//リストから不要オブジェクトを削除
-		for (auto i = bace.begin(); i != bace.end(); i++) {
+		for (auto i = bace.begin(); i != bace.end(); i++) {//リスト内のオブジェクトのフラグがfalseならばリストから削除
 			if ((*i)->FLAG == false) {
-				i = bace.erase(i);
+				i = bace.erase(i);//リストから削除
 				break;
 			}
 		}
@@ -196,7 +195,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR 
 			GetNetWorkDataLength(NetHandle)
 		);
 
-		//プレイヤー
+		//プレイヤーの状況を表示
 		for (int i = 0; i < MAX; i++) {
 			DrawFormatString(0, i * 16 + 32, GetColor(255, 255, 255),
 				"IPアドレス:%d.%d.%d.%d　x=%4f,y=%4f  flg=%d",
